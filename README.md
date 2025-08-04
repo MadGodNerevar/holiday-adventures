@@ -48,6 +48,18 @@ OR just open an **Issue** with the template to pitch something new!
 
 ---
 
+## 🌐 Issue Tracker
+
+Browse existing issues and create new ones from our GitHub Pages site:
+
+```
+https://YOUR-USERNAME.github.io/holiday-adventures/
+```
+
+To submit an issue, provide a personal access token with `repo` scope in the page's authentication section. The token is saved only in your browser storage.
+
+---
+
 ## ❤️ This Project
 
 Built by MGeee and co-planned with Kayleigh 🌅
