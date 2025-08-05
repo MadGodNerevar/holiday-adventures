@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Holiday Adventures Issue Tracker</title>
+  <title>Holiday Adventures Task Tracker</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <h1>Holiday Adventures Issue Tracker</h1>
+  <h1>Holiday Adventures Task Tracker</h1>
+  <p>Tasks are tracked as GitHub Issues, so templates live in <code>.github/ISSUE_TEMPLATE/</code>.</p>
 
   <section id="token">
     <h2>Authentication</h2>
@@ -17,7 +18,7 @@
   </section>
 
   <section id="issues">
-    <h2>Existing Issues</h2>
+    <h2>Existing Tasks</h2>
     <ul id="issues-list"></ul>
   </section>
 
@@ -32,7 +33,7 @@
   </section>
 
   <section id="new-issue">
-    <h2>Submit a New Issue</h2>
+    <h2>Submit a New Task</h2>
     <form id="issue-form">
       <label>
         Title
@@ -42,7 +43,7 @@
         Description
         <textarea id="issue-body" required></textarea>
       </label>
-      <button type="submit">Create Issue</button>
+      <button type="submit">Create Task</button>
     </form>
     <div id="issue-result"></div>
   </section>

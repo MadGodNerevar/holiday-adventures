@@ -10,7 +10,7 @@ async function loadIssues(headers) {
   listEl.innerHTML = '';
   try {
     const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, { headers });
-    if (!res.ok) throw new Error('Failed to fetch issues');
+    if (!res.ok) throw new Error('Failed to fetch tasks');
     const issues = await res.json();
     issues.forEach(issue => {
       const li = document.createElement('li');
@@ -23,7 +23,7 @@ async function loadIssues(headers) {
     });
   } catch (err) {
     const li = document.createElement('li');
-    li.textContent = 'Unable to load issues';
+    li.textContent = 'Unable to load tasks';
     listEl.appendChild(li);
     console.error(err);
   }
@@ -174,7 +174,7 @@ document.getElementById('issue-form').addEventListener('submit', async (e) => {
   const resultEl = document.getElementById('issue-result');
   if (res.ok) {
     const data = await res.json();
-    resultEl.innerHTML = `Issue created: <a href="${data.html_url}" target="_blank">${data.number}</a>`;
+    resultEl.innerHTML = `Task created: <a href="${data.html_url}" target="_blank">${data.number}</a>`;
     document.getElementById('issue-form').reset();
     loadData();
   } else {
