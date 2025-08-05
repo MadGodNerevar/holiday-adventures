@@ -9,6 +9,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="styles.css" />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-o9N1j7kzH0f+wJbJ2XESyqCCb72Wx3HE5g1Hn9gCnFE="
+    crossorigin=""
+  />
 </head>
 <body>
   <header class="banner">
@@ -56,24 +62,6 @@
         <li><label><input type="checkbox" /> Reserve hotels</label></li>
         <li><label><input type="checkbox" /> Pack bags</label></li>
       </ul>
-    </section>
-
-    <section id="timeline" data-aos="fade-up">
-      <h2>Itinerary &amp; Memories</h2>
-      <div class="timeline">
-        <div class="timeline-item" data-aos="fade-up">
-          <span class="timeline-date">Day 1</span>
-          <p>Arrive at destination and explore the city.</p>
-        </div>
-        <div class="timeline-item" data-aos="fade-up">
-          <span class="timeline-date">Day 2</span>
-          <p>Adventure tour with friends.</p>
-        </div>
-        <div class="timeline-item" data-aos="fade-up">
-          <span class="timeline-date">Day 3</span>
-          <p>Relax and capture memories.</p>
-        </div>
-      </div>
     </section>
 
     <section id="destinations" data-aos="fade-up">
@@ -136,10 +124,13 @@
       <section id="itinerary">
         <h2>Itinerary &amp; Memories</h2>
         <img src="https://source.unsplash.com/400x200/?map" alt="Itinerary map" class="section-image" loading="lazy" />
-        <div id="itinerary-timeline"></div>
+        <ul id="itinerary-list"></ul>
+        <div id="itinerary-map" style="height: 300px;"></div>
         <h3>Add or Update Entry</h3>
         <form id="itinerary-form">
           <input type="hidden" id="itinerary-issue-number" />
+          <label for="itinerary-day">Day</label>
+          <input type="number" id="itinerary-day" min="1" required />
           <label for="itinerary-destination">Destination</label>
           <input type="text" id="itinerary-destination" required />
           <label for="itinerary-activities">Activities</label>
@@ -182,6 +173,11 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" integrity="sha512-16esztaSRplJROstbIIdwX3N97V1+pZvV33ABoG1H2OyTttBxEGkTsoIVsiP1iaTtM8b3+hu2kB6pQ4Clr5yug==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-p4/RXu1tz0bqGLW2kYnxLZ+fFNIpYwhzDWp1ZP4sha8="
+    crossorigin=""
+  ></script>
   <script type="module" src="app.js"></script>
 </body>
 </html>

@@ -25,6 +25,9 @@ const unsplashAccessKey =
   envConfig.UNSPLASH_ACCESS_KEY ||
   '';
 
+let itineraryMap;
+let itineraryMarkers = [];
+
 function prefersReducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
@@ -352,38 +355,125 @@ async function loadHolidayBits(headers) {
   }
 }
 
+async function geocodeDestination(dest) {
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(dest)}`
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data && data.length) {
+      return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+    }
+  } catch (err) {
+    console.error('geocodeDestination:', err);
+  }
+  return null;
+}
+
+function initItineraryMap() {
+  const mapEl = document.getElementById('itinerary-map');
+  if (!mapEl || typeof L === 'undefined') return;
+  itineraryMap = L.map(mapEl).setView([20, 0], 2);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(itineraryMap);
+}
+
+function resetItineraryMarkers() {
+  if (!itineraryMap) return;
+  itineraryMarkers.forEach(m => itineraryMap.removeLayer(m));
+  itineraryMarkers = [];
+}
+
+function enableItineraryDrag(listEl, headers) {
+  let dragged;
+  listEl.addEventListener('dragstart', e => {
+    dragged = e.target.closest('li');
+    if (dragged) e.dataTransfer.effectAllowed = 'move';
+  });
+  listEl.addEventListener('dragover', e => {
+    e.preventDefault();
+    const target = e.target.closest('li');
+    if (!target || target === dragged) return;
+    const rect = target.getBoundingClientRect();
+    const next = (e.clientY - rect.top) / (rect.bottom - rect.top) > 0.5;
+    listEl.insertBefore(dragged, next ? target.nextSibling : target);
+  });
+  listEl.addEventListener('drop', e => {
+    e.preventDefault();
+    updateDayOrder(listEl, headers);
+  });
+}
+
+async function updateDayOrder(listEl, headers) {
+  const items = Array.from(listEl.children);
+  for (let i = 0; i < items.length; i++) {
+    const li = items[i];
+    const data = JSON.parse(li.dataset.body || '{}');
+    data.day = i + 1;
+    li.dataset.body = JSON.stringify(data);
+    const summary = li.querySelector('summary');
+    summary.textContent = `Day ${data.day}: ${li.dataset.destination}`;
+    if (headers.Authorization) {
+      await fetch(`https://api.github.com/repos/${owner}/${repo}/issues/${li.dataset.issue}`, {
+        method: 'PATCH',
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ body: JSON.stringify(data, null, 2) })
+      }).catch(err => console.error('updateDayOrder:', err));
+    }
+  }
+}
+
 async function loadItinerary(headers) {
-  const timelineEl = document.getElementById('itinerary-timeline');
-  if (!timelineEl) return;
-  timelineEl.innerHTML = '';
+  const listEl = document.getElementById('itinerary-list');
+  if (!listEl) return;
+  listEl.innerHTML = '';
+  resetItineraryMarkers();
   try {
     const res = await fetch(
       `https://api.github.com/repos/${owner}/${repo}/issues?labels=itinerary&per_page=100`,
       { headers }
     );
     if (!res.ok) {
-      timelineEl.textContent = 'No itinerary entries found.';
+      listEl.textContent = 'No itinerary entries found.';
       return;
     }
     const items = await res.json();
-    items.forEach(issue => {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'itinerary-item';
+    items.sort((a, b) => {
+      const da = (() => {
+        try { return JSON.parse(a.body).day; } catch (_) { return 0; }
+      })() || 0;
+      const db = (() => {
+        try { return JSON.parse(b.body).day; } catch (_) { return 0; }
+      })() || 0;
+      return da - db;
+    });
+    for (const issue of items) {
       let data = {};
       try {
         data = issue.body ? JSON.parse(issue.body) : {};
       } catch (_) {
         data = {};
       }
-      const title = document.createElement('h3');
-      title.textContent = issue.title;
-      wrapper.appendChild(title);
+      const day = data.day || items.indexOf(issue) + 1;
+      const li = document.createElement('li');
+      li.className = 'itinerary-day';
+      li.draggable = true;
+      li.dataset.issue = issue.number;
+      li.dataset.destination = issue.title;
+      li.dataset.body = JSON.stringify(data);
+      const details = document.createElement('details');
+      const summary = document.createElement('summary');
+      summary.textContent = `Day ${day}: ${issue.title}`;
+      details.appendChild(summary);
+      const content = document.createElement('div');
       if (data.photo) {
         const img = document.createElement('img');
         img.src = data.photo;
         img.alt = issue.title;
         img.loading = 'lazy';
-        wrapper.appendChild(img);
+        content.appendChild(img);
       }
       const fields = [
         ['Activities', data.activities],
@@ -394,7 +484,7 @@ async function loadItinerary(headers) {
         if (val) {
           const p = document.createElement('p');
           p.innerHTML = `<strong>${label}:</strong> ${val}`;
-          wrapper.appendChild(p);
+          content.appendChild(p);
         }
       });
       const editBtn = document.createElement('button');
@@ -403,6 +493,7 @@ async function loadItinerary(headers) {
         const form = document.getElementById('itinerary-form');
         if (!form) return;
         document.getElementById('itinerary-issue-number').value = issue.number;
+        document.getElementById('itinerary-day').value = data.day || '';
         document.getElementById('itinerary-destination').value = issue.title;
         document.getElementById('itinerary-activities').value = data.activities || '';
         document.getElementById('itinerary-budget').value = data.budget || '';
@@ -410,11 +501,33 @@ async function loadItinerary(headers) {
         document.getElementById('itinerary-notes').value = data.notes || '';
         form.scrollIntoView({ behavior: 'smooth' });
       });
-      wrapper.appendChild(editBtn);
-      timelineEl.appendChild(wrapper);
-    });
+      content.appendChild(editBtn);
+      details.appendChild(content);
+      li.appendChild(details);
+      listEl.appendChild(li);
+      if (itineraryMap) {
+        if (data.lat && data.lng) {
+          const marker = L.marker([data.lat, data.lng]).addTo(itineraryMap).bindPopup(issue.title);
+          itineraryMarkers.push(marker);
+        } else {
+          const coords = await geocodeDestination(issue.title);
+          if (coords) {
+            data.lat = coords.lat;
+            data.lng = coords.lng;
+            li.dataset.body = JSON.stringify(data);
+            const marker = L.marker([coords.lat, coords.lng]).addTo(itineraryMap).bindPopup(issue.title);
+            itineraryMarkers.push(marker);
+          }
+        }
+      }
+    }
+    if (itineraryMarkers.length && itineraryMap) {
+      const group = L.featureGroup(itineraryMarkers);
+      itineraryMap.fitBounds(group.getBounds().pad(0.2));
+    }
+    enableItineraryDrag(listEl, headers);
   } catch (err) {
-    timelineEl.textContent = 'Unable to load itinerary.';
+    listEl.textContent = 'Unable to load itinerary.';
     console.error('loadItinerary:', err && err.message ? err.message : err);
   }
 }
@@ -581,12 +694,18 @@ if (itineraryForm) {
       return;
     }
     const number = document.getElementById('itinerary-issue-number').value.trim();
+    const day = parseInt(document.getElementById('itinerary-day').value, 10);
     const destination = document.getElementById('itinerary-destination').value;
     const activities = document.getElementById('itinerary-activities').value;
     const budget = document.getElementById('itinerary-budget').value;
     const photo = document.getElementById('itinerary-photo').value;
     const notes = document.getElementById('itinerary-notes').value;
-    const bodyObj = { activities, budget, photo, notes };
+    const bodyObj = { day, activities, budget, photo, notes };
+    const coords = await geocodeDestination(destination);
+    if (coords) {
+      bodyObj.lat = coords.lat;
+      bodyObj.lng = coords.lng;
+    }
     const url = `https://api.github.com/repos/${owner}/${repo}/issues${number ? '/' + number : ''}`;
     const method = number ? 'PATCH' : 'POST';
     const payload = number
@@ -616,6 +735,7 @@ if (itineraryForm) {
 
 // Initial load
 document.addEventListener('DOMContentLoaded', () => {
+  initItineraryMap();
   loadUserProjects().then(() => loadProjectDetails(repo));
   loadData();
   updateActiveNav();
