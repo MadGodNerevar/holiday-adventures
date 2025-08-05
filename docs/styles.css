@@ -298,6 +298,10 @@ h2::before {
   content: '➕';
 }
 
+#destination-highlights h2::before {
+  content: '📸';
+}
+
 .hero {
   display: grid;
   margin-bottom: 2rem;

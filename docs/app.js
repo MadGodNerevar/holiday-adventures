@@ -18,6 +18,13 @@ let repo =
   (repoMeta ? repoMeta.getAttribute('content') : null) ||
   'next-trip';
 
+// Access key for Unsplash API (required for destination images)
+const unsplashAccessKey =
+  queryParams.get('unsplashKey') ||
+  globalConfig.unsplashAccessKey ||
+  envConfig.UNSPLASH_ACCESS_KEY ||
+  '';
+
 function prefersReducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
