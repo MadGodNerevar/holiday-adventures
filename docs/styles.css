@@ -7,6 +7,19 @@ section {
   margin-bottom: 2rem;
 }
 
+#holiday-bits div {
+  margin-bottom: 1rem;
+}
+
+#holiday-bits ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+#holiday-bits a {
+  color: #006400;
+}
+
 .columns {
   display: flex;
   gap: 1rem;
