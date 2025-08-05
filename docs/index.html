@@ -94,48 +94,52 @@
         <ul id="project-issues"></ul>
       </section>
 
-      <section id="tasks">
-        <h2>Tasks</h2>
-        <img src="assets/todo.svg" alt="Checklist" class="section-image" loading="lazy" referrerpolicy="no-referrer" />
-        <ul id="tasks-list"></ul>
-      </section>
-
-      <section id="project-board">
-        <h2>Project Board</h2>
-        <img src="assets/planning.svg" alt="Project planning board" class="section-image" loading="lazy" referrerpolicy="no-referrer" />
-        <div id="project-columns"></div>
-      </section>
-
       <section id="holiday-bits">
         <h2>Travel Bits</h2>
         <img src="assets/travel.svg" alt="Travel items" class="section-image" loading="lazy" referrerpolicy="no-referrer" />
         <div id="holiday-bits-container"></div>
       </section>
 
-      <section id="itinerary" class="card">
-        <h2>Itinerary &amp; Memories</h2>
-        <img src="assets/map.svg" alt="Itinerary map" class="section-image" loading="lazy" referrerpolicy="no-referrer" />
-        <ul id="itinerary-list"></ul>
-        <div id="itinerary-map" style="height: 300px;"></div>
-        <h3>Add or Update Entry</h3>
-        <form id="itinerary-form">
-          <input type="hidden" id="itinerary-issue-number" />
-          <label for="itinerary-day">Day</label>
-          <input type="number" id="itinerary-day" min="1" required />
-          <label for="itinerary-destination">Destination</label>
-          <input type="text" id="itinerary-destination" required />
-          <label for="itinerary-activities">Activities</label>
-          <textarea id="itinerary-activities"></textarea>
-          <label for="itinerary-budget">Budget</label>
-          <input type="text" id="itinerary-budget" />
-          <label for="itinerary-photo">Photo URL</label>
-          <input type="url" id="itinerary-photo" />
-          <label for="itinerary-notes">Notes</label>
-          <textarea id="itinerary-notes"></textarea>
-          <button type="submit">Save Entry</button>
-        </form>
-        <div id="itinerary-result"></div>
-      </section>
+      <div class="dashboard-grid">
+        <section id="itinerary" class="card">
+          <h2>Itinerary &amp; Memories</h2>
+          <img src="assets/map.svg" alt="Itinerary map" class="section-image" loading="lazy" referrerpolicy="no-referrer" />
+          <ul id="itinerary-list"></ul>
+          <div id="itinerary-map" style="height: 300px;"></div>
+          <h3>Add or Update Entry</h3>
+          <form id="itinerary-form">
+            <input type="hidden" id="itinerary-issue-number" />
+            <label for="itinerary-day">Day</label>
+            <input type="number" id="itinerary-day" min="1" required />
+            <label for="itinerary-destination">Destination</label>
+            <input type="text" id="itinerary-destination" required />
+            <label for="itinerary-activities">Activities</label>
+            <textarea id="itinerary-activities"></textarea>
+            <label for="itinerary-budget">Budget</label>
+            <input type="text" id="itinerary-budget" />
+            <label for="itinerary-photo">Photo URL</label>
+            <input type="url" id="itinerary-photo" />
+            <label for="itinerary-notes">Notes</label>
+            <textarea id="itinerary-notes"></textarea>
+            <button type="submit">Save Entry</button>
+          </form>
+          <div id="itinerary-result"></div>
+        </section>
+
+        <div class="widgets">
+          <section id="tasks">
+            <h2>Tasks</h2>
+            <img src="assets/todo.svg" alt="Checklist" class="section-image" loading="lazy" referrerpolicy="no-referrer" />
+            <ul id="tasks-list"></ul>
+          </section>
+
+          <section id="project-board">
+            <h2>Project Board</h2>
+            <img src="assets/planning.svg" alt="Project planning board" class="section-image" loading="lazy" referrerpolicy="no-referrer" />
+            <div id="project-columns"></div>
+          </section>
+        </div>
+      </div>
 
       <section id="new-task" class="card">
         <h2>Submit a New Task</h2>
@@ -162,11 +166,9 @@
       </div>
     </footer>
 
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"
     integrity="sha512-16esztaSRplJROstbIIdwX3N97V1+pZvV33ABoG1H2OyTttBxEGkTsoIVsiP1iaTtM8b3+hu2kB6pQ4Clr5yug=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"></script>
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
   <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"

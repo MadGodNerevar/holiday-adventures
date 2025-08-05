@@ -1,16 +1,10 @@
 // Configuration for repository information
-// Allow overrides via query parameters (e.g., ?owner=user&repo=project),
-// a global config object `window.HOLIDAY_CONFIG`, or environment variables
-// exposed on `window.ENV`. Falls back to parsing the current URL.
 import { GITHUB_TOKEN } from './config.js';
 const queryParams = new URLSearchParams(window.location.search);
 const globalConfig = window.HOLIDAY_CONFIG || {};
 const envConfig = (typeof window !== 'undefined' && (window.ENV || window.env)) || {};
-
-const username = 'MadGodNerevar';
-const owner = username;
-
-let repo = 'holiday-adventures';
+const owner = 'MadGodNerevar';
+const repo = 'holiday-adventures';
 
 // Access key for Unsplash API (required for destination images)
 const unsplashAccessKey =
@@ -55,18 +49,6 @@ function initTheme() {
 
 function getHolidayToken() {
   return GITHUB_TOKEN || localStorage.getItem('HOLIDAY_TOKEN') || '';
-}
-
-function loadUserProjects() {
-  const selector = document.getElementById('project-selector');
-  if (!selector) return;
-  selector.innerHTML = '';
-  const option = document.createElement('option');
-  option.value = 'holiday-adventures';
-  option.textContent = 'holiday adventures';
-  selector.appendChild(option);
-  selector.value = 'holiday-adventures';
-  selector.style.display = 'none';
 }
 
 async function loadProjectDetails(project) {
@@ -524,18 +506,6 @@ async function loadItinerary(headers) {
 }
 
   function loadData() {
-    if (!owner) {
-      console.warn('GitHub owner could not be determined. Please configure it.');
-      let warnEl = document.getElementById('config-warning');
-      if (!warnEl) {
-        warnEl = document.createElement('div');
-        warnEl.id = 'config-warning';
-        warnEl.textContent = 'GitHub owner is not configured. Please set it via ?owner= or a meta tag.';
-        const container = document.querySelector('.container') || document.body;
-        container.insertBefore(warnEl, container.firstChild);
-      }
-      return;
-    }
     const token = getHolidayToken();
     let headers = {};
     if (token) {
@@ -743,8 +713,6 @@ if (itineraryForm) {
 
 // Initial load
 document.addEventListener('DOMContentLoaded', () => {
-  const selector = document.getElementById('project-selector');
-  if (selector) selector.style.display = 'none';
   loadProjectDetails('holiday-adventures');
   initItineraryMap();
   loadData();
