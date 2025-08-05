@@ -1,6 +1,26 @@
-const owner = window.location.hostname.split('.')[0];
+// Configuration for repository information
+// Allow overrides via query parameters (e.g., ?owner=user&repo=project),
+// a global config object `window.HOLIDAY_CONFIG`, or environment variables
+// exposed on `window.ENV`. Falls back to parsing the current URL.
+const queryParams = new URLSearchParams(window.location.search);
+const globalConfig = window.HOLIDAY_CONFIG || {};
+const envConfig = (typeof window !== 'undefined' && (window.ENV || window.env)) || {};
+
+const owner =
+  queryParams.get('owner') ||
+  globalConfig.owner ||
+  envConfig.GITHUB_OWNER ||
+  window.location.hostname.split('.')[0];
+
 const repoMeta = document.querySelector('meta[name="repo"]');
-const repo = repoMeta ? repoMeta.getAttribute('content') : 'holiday-adventures';
+const repo =
+  queryParams.get('repo') ||
+  globalConfig.repo ||
+  envConfig.GITHUB_REPO ||
+  (repoMeta ? repoMeta.getAttribute('content') : null) ||
+  window.location.pathname.split('/')[1] ||
+  'holiday-adventures';
+
 
 function getHolidayToken() {
   return localStorage.getItem('HOLIDAY_TOKEN') || '';
@@ -8,6 +28,10 @@ function getHolidayToken() {
 
 async function loadTasks(headers) {
   const listEl = document.getElementById('tasks-list');
+  if (!listEl) {
+    console.warn('Tasks list element not found');
+    return;
+  }
   listEl.innerHTML = '';
   try {
     const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, { headers });
@@ -32,68 +56,110 @@ async function loadTasks(headers) {
 
 async function loadProjectBoard(headers) {
   const boardEl = document.getElementById('project-columns');
+  if (!boardEl) {
+    console.warn('Project columns element not found');
+    return;
+  }
   boardEl.innerHTML = '';
   try {
-    const projectRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/projects`, {
-      headers: { ...headers, Accept: 'application/vnd.github.inertia-preview+json' }
+    const token = headers.Authorization ? headers.Authorization.split(' ')[1] : null;
+    const gqlHeaders = token
+      ? { Authorization: `bearer ${token}`, 'Content-Type': 'application/json' }
+      : { 'Content-Type': 'application/json' };
+
+    const query = `
+      query($owner: String!, $repo: String!) {
+        repository(owner: $owner, name: $repo) {
+          projectsV2(first: 10) {
+            nodes {
+              title
+              items(first: 50) {
+                nodes {
+                  content {
+                    ... on Issue { title url }
+                    ... on PullRequest { title url }
+                    ... on DraftIssue { title }
+                  }
+                  fieldValues(first: 10) {
+                    nodes {
+                      ... on ProjectV2ItemFieldSingleSelectValue {
+                        name
+                        field { name }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    const projectRes = await fetch('https://api.github.com/graphql', {
+      method: 'POST',
+      headers: gqlHeaders,
+      body: JSON.stringify({ query, variables: { owner, repo } })
     });
     if (!projectRes.ok) throw new Error('Failed to fetch projects');
-    const projects = await projectRes.json();
+    const projectData = await projectRes.json();
+    const projects = projectData?.data?.repository?.projectsV2?.nodes || [];
+    if (!projects.length) {
+      boardEl.textContent = 'No projects found';
+      return;
+    }
     for (const project of projects) {
       const projectDiv = document.createElement('div');
       projectDiv.className = 'project';
       const projectTitle = document.createElement('h3');
-      projectTitle.textContent = project.name;
+      projectTitle.textContent = project.title;
       projectDiv.appendChild(projectTitle);
 
-      const columnsRes = await fetch(project.columns_url, {
-        headers: { ...headers, Accept: 'application/vnd.github.inertia-preview+json' }
-      });
-      if (!columnsRes.ok) continue;
-      const columns = await columnsRes.json();
       const columnsContainer = document.createElement('div');
       columnsContainer.className = 'columns';
-      for (const column of columns) {
+      const columnMap = {};
+      project.items.nodes.forEach(item => {
+        let status = 'No Status';
+        item.fieldValues.nodes.forEach(fv => {
+          if (fv.field && fv.field.name === 'Status' && fv.name) {
+            status = fv.name;
+          }
+        });
+        columnMap[status] = columnMap[status] || [];
+        columnMap[status].push(item);
+      });
+
+      Object.entries(columnMap).forEach(([status, items]) => {
         const columnDiv = document.createElement('div');
         columnDiv.className = 'column';
         const columnTitle = document.createElement('h4');
-        columnTitle.textContent = column.name;
+        columnTitle.textContent = status;
         columnDiv.appendChild(columnTitle);
-
-        const cardsRes = await fetch(column.cards_url, {
-          headers: { ...headers, Accept: 'application/vnd.github.inertia-preview+json' }
-        });
-        if (cardsRes.ok) {
-          const cards = await cardsRes.json();
-          const ul = document.createElement('ul');
-          for (const card of cards) {
-            const li = document.createElement('li');
-            if (card.content_url) {
-              const contentRes = await fetch(card.content_url, { headers });
-              if (contentRes.ok) {
-                const content = await contentRes.json();
-                const link = document.createElement('a');
-                link.href = content.html_url;
-                link.textContent = content.title;
-                link.target = '_blank';
-                li.appendChild(link);
-              } else {
-                li.textContent = 'Item';
-              }
-            } else {
-              li.textContent = card.note || 'Card';
-            }
-            ul.appendChild(li);
+        const ul = document.createElement('ul');
+        items.forEach(item => {
+          const li = document.createElement('li');
+          if (item.content && item.content.url) {
+            const link = document.createElement('a');
+            link.href = item.content.url;
+            link.textContent = item.content.title;
+            link.target = '_blank';
+            li.appendChild(link);
+          } else if (item.content && item.content.title) {
+            li.textContent = item.content.title;
+          } else {
+            li.textContent = 'Item';
           }
-          columnDiv.appendChild(ul);
-        }
+          ul.appendChild(li);
+        });
+        columnDiv.appendChild(ul);
         columnsContainer.appendChild(columnDiv);
-      }
+      });
+
       projectDiv.appendChild(columnsContainer);
       boardEl.appendChild(projectDiv);
     }
   } catch (err) {
-    boardEl.textContent = 'Unable to load project board';
+    boardEl.textContent = 'Projects could not be loaded.';
     console.error(err);
   }
 }
@@ -145,44 +211,50 @@ function loadData() {
   loadHolidayBits(headers);
 }
 
-document.getElementById('save-token').addEventListener('click', () => {
-  const tokenInput = document.getElementById('token-input');
-  const val = tokenInput.value.trim();
-  if (val) {
-    localStorage.setItem('HOLIDAY_TOKEN', val);
-    tokenInput.value = '';
-    loadData();
-  }
-});
-
-document.getElementById('task-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const token = getHolidayToken();
-  if (!token) {
-    alert('Please save a token first.');
-    return;
-  }
-  const title = document.getElementById('task-title').value;
-  const body = document.getElementById('task-body').value;
-  const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, {
-    method: 'POST',
-    headers: {
-      Authorization: `token ${token}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ title, body })
+const saveBtn = document.getElementById('save-token');
+if (saveBtn) {
+  saveBtn.addEventListener('click', () => {
+    const tokenInput = document.getElementById('token-input');
+    const val = tokenInput.value.trim();
+    if (val) {
+      localStorage.setItem('HOLIDAY_TOKEN', val);
+      tokenInput.value = '';
+      loadData();
+    }
   });
-  const resultEl = document.getElementById('task-result');
-  if (res.ok) {
-    const data = await res.json();
-    resultEl.innerHTML = `Task created: <a href="${data.html_url}" target="_blank">${data.number}</a>`;
-    document.getElementById('task-form').reset();
-    loadData();
-  } else {
-    const err = await res.json();
-    resultEl.textContent = `Error: ${err.message}`;
-  }
-});
+}
+
+const taskForm = document.getElementById('task-form');
+if (taskForm) {
+  taskForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const token = getHolidayToken();
+    if (!token) {
+      alert('Please save a token first.');
+      return;
+    }
+    const title = document.getElementById('task-title').value;
+    const body = document.getElementById('task-body').value;
+    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, {
+      method: 'POST',
+      headers: {
+        Authorization: `token ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ title, body })
+    });
+    const resultEl = document.getElementById('task-result');
+    if (res.ok) {
+      const data = await res.json();
+      resultEl.innerHTML = `Task created: <a href="${data.html_url}" target="_blank">${data.number}</a>`;
+      taskForm.reset();
+      loadData();
+    } else {
+      const err = await res.json();
+      resultEl.textContent = `Error: ${err.message}`;
+    }
+  });
+}
 
 // Initial load
-loadData();
+document.addEventListener('DOMContentLoaded', loadData);
