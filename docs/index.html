@@ -25,11 +25,7 @@
     </nav>
 
     <section class="hero">
-      <div class="hero-slideshow">
-        <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=1600&h=600&q=80" alt="Sunny desert" />
-        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&h=600&q=80" alt="Ocean waves" />
-        <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1600&h=600&q=80" alt="Forest trail" />
-      </div>
+      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&h=600&q=80" alt="Ocean waves" class="hero-image" />
       <div class="hero-tagline" data-aos="zoom-in">
         Your next adventure starts here
         <div class="hero-cta">
@@ -39,63 +35,79 @@
       </div>
     </section>
 
-    <section id="project-selector" data-aos="fade-up">
-      <h2>Project Selector</h2>
-      <select id="project-select" aria-label="Select project">
-        <option value="">Loading projects...</option>
-      </select>
-    </section>
+    <main class="container">
+      <section id="project-selector" class="card" data-aos="fade-up">
+        <h2>Project Selector</h2>
+        <select id="project-select" aria-label="Select project">
+          <option value="">Loading projects...</option>
+        </select>
+      </section>
 
-    <section id="planner" data-aos="fade-up">
-      <h2>Interactive Planner</h2>
-      <div class="progress-wrapper">
-        <div id="planner-progress"></div>
+      <section id="planner" class="card" data-aos="fade-up">
+        <h2>Interactive Planner</h2>
+        <div class="progress-wrapper">
+          <div id="planner-progress"></div>
+        </div>
+        <ul id="planner-tasks">
+          <li><label><input type="checkbox" /> Book flights</label></li>
+          <li><label><input type="checkbox" /> Reserve hotels</label></li>
+          <li><label><input type="checkbox" /> Pack bags</label></li>
+        </ul>
+      </section>
+
+      <div class="dashboard-grid">
+        <section id="timeline" class="card" data-aos="fade-up">
+          <h2>Itinerary &amp; Memories</h2>
+          <div class="timeline">
+            <div class="timeline-item" data-aos="fade-up">
+              <span class="timeline-date">Day 1</span>
+              <p>Arrive at destination and explore the city.</p>
+            </div>
+            <div class="timeline-item" data-aos="fade-up">
+              <span class="timeline-date">Day 2</span>
+              <p>Adventure tour with friends.</p>
+            </div>
+            <div class="timeline-item" data-aos="fade-up">
+              <span class="timeline-date">Day 3</span>
+              <p>Relax and capture memories.</p>
+            </div>
+          </div>
+        </section>
+
+        <div class="widgets">
+          <section id="tasks" class="card">
+            <h2>Tasks</h2>
+            <img src="https://source.unsplash.com/400x200/?todo" alt="Checklist" class="section-image" loading="lazy" />
+            <ul id="tasks-list"></ul>
+          </section>
+
+          <section id="project-board" class="card">
+            <h2>Project Board</h2>
+            <img src="https://source.unsplash.com/400x200/?planning" alt="Project planning board" class="section-image" loading="lazy" />
+            <div id="project-columns"></div>
+          </section>
+        </div>
       </div>
-      <ul id="planner-tasks">
-        <li><label><input type="checkbox" /> Book flights</label></li>
-        <li><label><input type="checkbox" /> Reserve hotels</label></li>
-        <li><label><input type="checkbox" /> Pack bags</label></li>
-      </ul>
-    </section>
 
-    <section id="timeline" data-aos="fade-up">
-      <h2>Itinerary &amp; Memories</h2>
-      <div class="timeline">
-        <div class="timeline-item" data-aos="fade-up">
-          <span class="timeline-date">Day 1</span>
-          <p>Arrive at destination and explore the city.</p>
+      <section id="destinations" class="card" data-aos="fade-up">
+        <h2>Destination Highlights</h2>
+        <div class="destinations-grid">
+          <div class="destination" data-aos="zoom-in">
+            <img src="https://source.unsplash.com/300x200/?paris" alt="Paris" />
+            <h3>Paris</h3>
+          </div>
+          <div class="destination" data-aos="zoom-in">
+            <img src="https://source.unsplash.com/300x200/?tokyo" alt="Tokyo" />
+            <h3>Tokyo</h3>
+          </div>
+          <div class="destination" data-aos="zoom-in">
+            <img src="https://source.unsplash.com/300x200/?newyork" alt="New York" />
+            <h3>New York</h3>
+          </div>
         </div>
-        <div class="timeline-item" data-aos="fade-up">
-          <span class="timeline-date">Day 2</span>
-          <p>Adventure tour with friends.</p>
-        </div>
-        <div class="timeline-item" data-aos="fade-up">
-          <span class="timeline-date">Day 3</span>
-          <p>Relax and capture memories.</p>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <section id="destinations" data-aos="fade-up">
-      <h2>Destination Highlights</h2>
-      <div class="destinations-grid">
-        <div class="destination" data-aos="zoom-in">
-          <img src="https://source.unsplash.com/300x200/?paris" alt="Paris" />
-          <h3>Paris</h3>
-        </div>
-        <div class="destination" data-aos="zoom-in">
-          <img src="https://source.unsplash.com/300x200/?tokyo" alt="Tokyo" />
-          <h3>Tokyo</h3>
-        </div>
-        <div class="destination" data-aos="zoom-in">
-          <img src="https://source.unsplash.com/300x200/?newyork" alt="New York" />
-          <h3>New York</h3>
-        </div>
-      </div>
-    </section>
-
-    <div class="container">
-      <section id="token">
+      <section id="token" class="card">
         <h2>Authentication</h2>
         <img src="https://source.unsplash.com/400x200/?lock" alt="Secure lock" class="section-image" loading="lazy" />
         <p>Enter a GitHub personal access token with <code>repo</code> scope. The token is stored only in this browser as <code>HOLIDAY_TOKEN</code> in <code>localStorage</code>.</p>
@@ -104,7 +116,7 @@
         <button id="save-token">Save Token</button>
       </section>
 
-      <section id="projects">
+      <section id="projects" class="card">
         <h2>Projects</h2>
         <label for="project-selector">Choose a project</label>
         <select id="project-selector"></select>
@@ -115,25 +127,13 @@
         <ul id="project-issues"></ul>
       </section>
 
-      <section id="tasks">
-        <h2>Tasks</h2>
-        <img src="https://source.unsplash.com/400x200/?todo" alt="Checklist" class="section-image" loading="lazy" />
-        <ul id="tasks-list"></ul>
-      </section>
-
-      <section id="project-board">
-        <h2>Project Board</h2>
-        <img src="https://source.unsplash.com/400x200/?planning" alt="Project planning board" class="section-image" loading="lazy" />
-        <div id="project-columns"></div>
-      </section>
-
-      <section id="holiday-bits">
+      <section id="holiday-bits" class="card">
         <h2>Travel Bits</h2>
         <img src="https://source.unsplash.com/400x200/?travel" alt="Travel items" class="section-image" loading="lazy" />
         <div id="holiday-bits-container"></div>
       </section>
 
-      <section id="itinerary">
+      <section id="itinerary" class="card">
         <h2>Itinerary &amp; Memories</h2>
         <img src="https://source.unsplash.com/400x200/?map" alt="Itinerary map" class="section-image" loading="lazy" />
         <div id="itinerary-timeline"></div>
@@ -155,7 +155,7 @@
         <div id="itinerary-result"></div>
       </section>
 
-      <section id="new-task">
+      <section id="new-task" class="card">
         <h2>Submit a New Task</h2>
         <img src="https://source.unsplash.com/400x200/?pencil" alt="Writing a new task" class="section-image" loading="lazy" />
         <form id="task-form">
@@ -167,7 +167,7 @@
         </form>
         <div id="task-result"></div>
       </section>
-    </div>
+    </main>
 
     <footer class="site-footer">
       <div class="footer-content">
