@@ -204,11 +204,12 @@ async function loadProjectBoard(headers, projectId) {
     const gqlHeaders = token
       ? { Authorization: `bearer ${token}`, 'Content-Type': 'application/json' }
       : { 'Content-Type': 'application/json' };
-    const query = `
-      query($owner: String!, $repo: String!) {
-        repository(owner: $owner, name: $repo) {
-          projectsV2(first: 10) {
-            nodes {
+    let projects = [];
+    if (projectId) {
+      const query = `
+        query($id: ID!) {
+          node(id: $id) {
+            ... on ProjectV2 {
               id
               title
               items(first: 50) {
