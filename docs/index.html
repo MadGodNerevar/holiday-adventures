@@ -25,6 +25,7 @@
     <a href="#tasks"><span class="nav-icon">📝</span>Tasks</a>
     <a href="#project-board"><span class="nav-icon">📋</span>Project Board</a>
     <a href="#holiday-bits"><span class="nav-icon">🎒</span>Holiday Bits</a>
+    <a href="#itinerary"><span class="nav-icon">🗺️</span>Itinerary</a>
   </nav>
 
   <section class="hero">
@@ -62,6 +63,28 @@
       <h2>Travel Bits</h2>
       <img src="https://source.unsplash.com/400x200/?travel" alt="Travel items" class="section-image" loading="lazy" />
       <div id="holiday-bits-container"></div>
+    </section>
+
+    <section id="itinerary">
+      <h2>Itinerary &amp; Memories</h2>
+      <img src="https://source.unsplash.com/400x200/?map" alt="Itinerary map" class="section-image" loading="lazy" />
+      <div id="itinerary-timeline"></div>
+      <h3>Add or Update Entry</h3>
+      <form id="itinerary-form">
+        <input type="hidden" id="itinerary-issue-number" />
+        <label for="itinerary-destination">Destination</label>
+        <input type="text" id="itinerary-destination" required />
+        <label for="itinerary-activities">Activities</label>
+        <textarea id="itinerary-activities"></textarea>
+        <label for="itinerary-budget">Budget</label>
+        <input type="text" id="itinerary-budget" />
+        <label for="itinerary-photo">Photo URL</label>
+        <input type="url" id="itinerary-photo" />
+        <label for="itinerary-notes">Notes</label>
+        <textarea id="itinerary-notes"></textarea>
+        <button type="submit">Save Entry</button>
+      </form>
+      <div id="itinerary-result"></div>
     </section>
 
     <section id="new-task">
