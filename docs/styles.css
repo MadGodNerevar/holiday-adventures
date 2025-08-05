@@ -23,6 +23,16 @@ section {
   border-radius: 8px;
 }
 
+.section-image {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  display: block;
+  margin: 0.5rem auto 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
 h1,
 h2 {
   font-family: 'Poppins', sans-serif;
