@@ -13,6 +13,7 @@
   <section id="token">
     <h2>Authentication</h2>
     <p>Enter a GitHub personal access token with <code>repo</code> scope. The token is stored only in this browser as <code>HOLIDAY_TOKEN</code> in <code>localStorage</code>.</p>
+    <label for="token-input">Personal Access Token</label>
     <input type="password" id="token-input" placeholder="HOLIDAY_TOKEN" />
     <button id="save-token">Save Token</button>
   </section>
@@ -34,14 +35,10 @@
   <section id="new-task">
     <h2>Submit a New Task</h2>
     <form id="task-form">
-      <label>
-        Title
-        <input type="text" id="task-title" required />
-      </label>
-      <label>
-        Description
-        <textarea id="task-body" required></textarea>
-      </label>
+      <label for="task-title">Title</label>
+      <input type="text" id="task-title" required />
+      <label for="task-body">Description</label>
+      <textarea id="task-body" required></textarea>
       <button type="submit">Create Task</button>
     </form>
     <div id="task-result"></div>
