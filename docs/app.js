@@ -3,7 +3,6 @@ import { GITHUB_TOKEN } from './config.js';
 const queryParams = new URLSearchParams(window.location.search);
 const globalConfig = window.HOLIDAY_CONFIG || {};
 const envConfig = (typeof window !== 'undefined' && (window.ENV || window.env)) || {};
-
 const owner = 'MadGodNerevar';
 const repo = 'holiday-adventures';
 
