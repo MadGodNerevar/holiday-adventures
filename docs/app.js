@@ -246,6 +246,21 @@ function loadData() {
   loadHolidayBits(headers);
 }
 
+function updateActiveNav() {
+  const links = document.querySelectorAll('.main-nav a');
+  let activeLink = null;
+  links.forEach(link => {
+    const section = document.querySelector(link.getAttribute('href'));
+    if (section) {
+      const rect = section.getBoundingClientRect();
+      if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+        activeLink = link;
+      }
+    }
+  });
+  links.forEach(link => link.classList.toggle('active', link === activeLink));
+}
+
 const saveBtn = document.getElementById('save-token');
 if (saveBtn) {
   saveBtn.addEventListener('click', () => {
@@ -292,4 +307,8 @@ if (taskForm) {
 }
 
 // Initial load
-document.addEventListener('DOMContentLoaded', loadData);
+document.addEventListener('DOMContentLoaded', () => {
+  loadData();
+  updateActiveNav();
+});
+window.addEventListener('scroll', updateActiveNav);
