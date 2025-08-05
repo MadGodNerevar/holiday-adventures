@@ -97,11 +97,51 @@ async function loadProjectBoard(headers) {
   }
 }
 
+async function loadHolidayBits(headers) {
+  const container = document.getElementById('holiday-bits-container');
+  if (!container) return;
+  container.innerHTML = '';
+  const sections = [
+    { path: 'destinations', title: 'Destinations' },
+    { path: 'ideas', title: 'Ideas' },
+    { path: 'packing-lists', title: 'Packing Lists' },
+    { path: 'itinerary-templates', title: 'Itinerary Templates' }
+  ];
+  for (const { path, title } of sections) {
+    try {
+      const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, { headers });
+      if (!res.ok) continue;
+      const files = await res.json();
+      const sectionDiv = document.createElement('div');
+      const h3 = document.createElement('h3');
+      h3.textContent = title;
+      sectionDiv.appendChild(h3);
+      const ul = document.createElement('ul');
+      files.forEach(file => {
+        if (file.type === 'file') {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = file.html_url;
+          a.textContent = file.name;
+          a.target = '_blank';
+          li.appendChild(a);
+          ul.appendChild(li);
+        }
+      });
+      sectionDiv.appendChild(ul);
+      container.appendChild(sectionDiv);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+}
+
 function loadData() {
   const token = getHolidayToken();
   const headers = token ? { Authorization: `token ${token}` } : {};
   loadIssues(headers);
   loadProjectBoard(headers);
+  loadHolidayBits(headers);
 }
 
 document.getElementById('save-token').addEventListener('click', () => {
