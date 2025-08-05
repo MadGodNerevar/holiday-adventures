@@ -8,12 +8,45 @@
   --bg-color: var(--sand);
   --text-color: #222;
   --card-bg: #ffffff;
+
+  /* Section defaults */
+  --section-border: rgba(0, 0, 0, 0.1);
+  --section-shadow: rgba(0, 0, 0, 0.05);
+  --section-text: var(--text-color);
+  --section-bg-odd: #ffffff;
+  --section-bg-even: #fafafa;
+  --section-image-shadow: rgba(0, 0, 0, 0.1);
+  --hero-tagline-bg: rgba(0, 0, 0, 0.5);
+
+  /* Spacing scale */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+
+  /* Typography scale */
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-md: 1.25rem;
+  --font-size-lg: 1.5rem;
+  --font-size-xl: 2rem;
+  --font-size-xxl: 2.5rem;
 }
 
 [data-theme="dark"] {
   --bg-color: #0d1b2a;
   --text-color: #f4e1d2;
   --card-bg: #1b263b;
+
+  /* Section defaults */
+  --section-border: rgba(255, 255, 255, 0.1);
+  --section-shadow: rgba(0, 0, 0, 0.6);
+  --section-text: var(--text-color);
+  --section-bg-odd: #1b263b;
+  --section-bg-even: #16222f;
+  --section-image-shadow: rgba(0, 0, 0, 0.6);
+  --hero-tagline-bg: rgba(0, 0, 0, 0.6);
 }
 
 * {
@@ -26,11 +59,24 @@ body {
   background: var(--bg-color);
   color: var(--text-color);
   line-height: 1.6;
+  font-size: var(--font-size-base);
 }
 
 h1, h2, h3 {
   font-family: 'Poppins', sans-serif;
   margin-top: 0;
+}
+
+h1 {
+  font-size: var(--font-size-xxl);
+}
+
+h2 {
+  font-size: var(--font-size-xl);
+}
+
+h3 {
+  font-size: var(--font-size-md);
 }
 
 .banner {
@@ -39,13 +85,13 @@ h1, h2, h3 {
   align-items: center;
   background: var(--teal);
   color: #fff;
-  padding: 1rem 2rem;
+  padding: var(--space-md) var(--space-xl);
 }
 
 section {
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-xl);
   border: 1px solid var(--section-border);
-  padding: 1rem;
+  padding: var(--space-md);
   border-radius: 8px;
   box-shadow: 0 2px 4px var(--section-shadow);
   color: var(--section-text);
@@ -81,7 +127,7 @@ section:nth-of-type(even) {
   max-width: 400px;
   height: auto;
   display: block;
-  margin: 0.5rem auto 1rem;
+  margin: var(--space-sm) auto var(--space-md);
   box-shadow: 0 2px 4px var(--section-image-shadow);
   border-radius: 8px;
 }
@@ -95,7 +141,7 @@ h2 {
 
 h2::before {
   display: inline-block;
-  margin-right: 0.5rem;
+  margin-right: var(--space-sm);
 }
 
 #token h2::before {
@@ -123,10 +169,16 @@ h2::before {
 }
 
 .hero {
-  display: grid;
-  margin-bottom: 2rem;
   position: relative;
-  height: 40vh;
+  display: grid;
+  place-items: center;
+  margin-bottom: var(--space-xl);
+  height: 60vh;
+  text-align: center;
+  color: #fff;
+  background: linear-gradient(-45deg, var(--teal), var(--coral), var(--sunset), var(--teal));
+  background-size: 400% 400%;
+  overflow: hidden;
 }
 
 .hero-slideshow {
@@ -157,10 +209,12 @@ h2::before {
   place-self: center;
   text-align: center;
   background: var(--hero-tagline-bg);
-  padding: 1rem;
+  padding: var(--space-md);
   border-radius: 8px;
   will-change: transform, opacity;
   z-index: 1;
+  max-width: 80%;
+  font-size: var(--font-size-xl);
 }
 
 @media (max-width: 600px) {
@@ -178,9 +232,9 @@ h2::before {
 .main-nav {
   display: flex;
   justify-content: center;
-  gap: 1rem;
+  gap: var(--space-md);
   background: var(--sand);
-  padding: 0.5rem;
+  padding: var(--space-sm);
 }
 
 .main-nav a {
@@ -189,28 +243,10 @@ h2::before {
   font-weight: 600;
 }
 
-.hero {
-  position: relative;
-  height: 60vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: #fff;
-  background: linear-gradient(-45deg, var(--teal), var(--coral), var(--sunset), var(--teal));
-  background-size: 400% 400%;
-  overflow: hidden;
-}
-
-.hero-tagline {
-  font-size: 2rem;
-  max-width: 80%;
-  z-index: 1;
-}
 
 .hero-icons span {
   position: absolute;
-  font-size: 2.5rem;
+  font-size: var(--font-size-xxl);
   animation: float 6s ease-in-out infinite;
   opacity: 0.8;
 }
@@ -227,15 +263,15 @@ h2::before {
 
 .cards {
   display: grid;
-  gap: 1.5rem;
-  padding: 2rem;
+  gap: var(--space-lg);
+  padding: var(--space-xl);
 }
 
 .card {
   background: var(--card-bg);
   border-radius: 15px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
+  padding: var(--space-lg);
   transition: transform 0.3s;
 }
 
@@ -243,14 +279,14 @@ h2::before {
   width: 100%;
   border-radius: 10px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-md);
 }
 
 button {
   background: var(--teal);
   color: #fff;
   border: none;
-  padding: 0.5rem 1rem;
+  padding: var(--space-sm) var(--space-md);
   border-radius: 8px;
   cursor: pointer;
 }
@@ -279,14 +315,14 @@ button:hover {
 
 /* Additional layout and animation sections */
 .hero-cta {
-  margin-top: 1rem;
+  margin-top: var(--space-md);
   display: flex;
   justify-content: center;
-  gap: 1rem;
+  gap: var(--space-md);
 }
 
 .hero-cta button {
-  padding: 0.75rem 1.5rem;
+  padding: var(--space-md) var(--space-lg);
   border: none;
   border-radius: 6px;
   background: var(--color-accent);
@@ -301,11 +337,11 @@ button:hover {
 
 #project-selector {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-xl);
 }
 
 #project-selector select {
-  padding: 0.5rem 1rem;
+  padding: var(--space-sm) var(--space-md);
   border: 1px solid var(--input-border);
   border-radius: 6px;
   background: var(--input-bg);
@@ -318,7 +354,7 @@ button:hover {
   background: var(--color-surface);
   border-radius: 8px;
   overflow: hidden;
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-md);
 }
 
 #planner-progress {
@@ -333,18 +369,18 @@ button:hover {
 }
 
 #planner-tasks li {
-  margin: 0.5rem 0;
+  margin: var(--space-sm) 0;
 }
 
 .timeline {
   position: relative;
-  margin-left: 1rem;
-  padding-left: 1rem;
+  margin-left: var(--space-md);
+  padding-left: var(--space-md);
   border-left: 2px solid var(--color-primary);
 }
 
 .timeline-item {
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-md);
 }
 
 .timeline-date {
@@ -355,12 +391,12 @@ button:hover {
 .destinations-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
+  gap: var(--space-md);
 }
 
 .destination {
   background: var(--color-surface);
-  padding: 0.5rem;
+  padding: var(--space-sm);
   border-radius: 8px;
   text-align: center;
   box-shadow: 0 2px 4px var(--section-shadow);
@@ -371,21 +407,21 @@ button:hover {
   height: 120px;
   object-fit: cover;
   border-radius: 6px;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--space-sm);
 }
 
 .site-footer {
   background: linear-gradient(90deg, var(--color-bg-start), var(--color-bg-end));
-  padding: 1.5rem;
-  margin-top: 2rem;
+  padding: var(--space-lg);
+  margin-top: var(--space-xl);
   text-align: center;
   color: var(--color-secondary);
 }
 
 .site-footer .social-icons a {
-  margin: 0 0.5rem;
+  margin: 0 var(--space-sm);
   color: var(--color-secondary);
-  font-size: 1.5rem;
+  font-size: var(--font-size-lg);
   text-decoration: none;
 }
 
