@@ -3,16 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Holiday Adventures Task Tracker</title>
+<title>Adventure Holiday's Tracker</title>
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="hero">
-    <img src="https://images.unsplash.com/photo-1541417904953-9e57f9ff675f?auto=format&fit=crop&w=1600&q=80" alt="Holiday lights" class="hero-image" />
-    <div class="hero-tagline">
-      <h1>🎄 Holiday Adventures Task Tracker 🎄</h1>
-      <p>Plan, track, and celebrate your festive projects</p>
-    </div>
+  <header class="banner">
+    <h1>✈️ Adventure Holiday's Tracker ✈️</h1>
   </header>
   <nav class="main-nav">
     <a href="#tasks">Tasks</a>
@@ -22,6 +18,7 @@
   <section id="token">
     <h2>Authentication</h2>
     <p>Enter a GitHub personal access token with <code>repo</code> scope. The token is stored only in this browser as <code>HOLIDAY_TOKEN</code> in <code>localStorage</code>.</p>
+    <label for="token-input">Personal Access Token</label>
     <input type="password" id="token-input" placeholder="HOLIDAY_TOKEN" />
     <button id="save-token">Save Token</button>
   </section>
@@ -36,21 +33,17 @@
   </section>
 
   <section id="holiday-bits">
-    <h2>Holiday Bits</h2>
+    <h2>Travel Bits</h2>
     <div id="holiday-bits-container"></div>
   </section>
   
   <section id="new-task">
     <h2>Submit a New Task</h2>
     <form id="task-form">
-      <label>
-        Title
-        <input type="text" id="task-title" required />
-      </label>
-      <label>
-        Description
-        <textarea id="task-body" required></textarea>
-      </label>
+      <label for="task-title">Title</label>
+      <input type="text" id="task-title" required />
+      <label for="task-body">Description</label>
+      <textarea id="task-body" required></textarea>
       <button type="submit">Create Task</button>
     </form>
     <div id="task-result"></div>

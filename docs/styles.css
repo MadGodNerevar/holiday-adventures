@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Poppins', sans-serif;
   margin: 2rem;
-  background: linear-gradient(120deg, #b30000, #006400);
+  background: linear-gradient(120deg, #00b4d8, #ffb703);
   background-image: radial-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px);
   background-size: 20px 20px;
   color: #fff;
@@ -12,21 +12,21 @@ body {
 section {
   margin-bottom: 2rem;
   background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(240, 196, 25, 0.4);
+  border: 1px solid rgba(255, 183, 3, 0.4);
   padding: 1rem;
   border-radius: 8px;
 }
 
 h1,
 h2 {
-  font-family: 'Mountains of Christmas', cursive;
-  color: #f0c419;
+  font-family: 'Poppins', sans-serif;
+  color: #ffb703;
   text-shadow: 1px 1px 2px #000;
 }
 
 h1::before,
 h2::before {
-  content: '\\2744';
+  content: '\\2708';
   margin-right: 0.5rem;
 }
 
@@ -83,7 +83,7 @@ h2::before {
 }
 
 #holiday-bits a {
-  color: #006400;
+  color: #0077b6;
 }
 
 .columns {
@@ -92,8 +92,44 @@ h2::before {
 }
 
 .column {
-  border: 1px solid #f0c419;
+  border: 1px solid #ffb703;
   background: rgba(255, 255, 255, 0.8);
   padding: 0.5rem;
   width: 200px;
+}
+
+input,
+textarea,
+button {
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  border: 2px solid #f0c419;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 1rem;
+  min-height: 44px;
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+input,
+textarea {
+  background: rgba(255, 255, 255, 0.9);
+  color: #000;
+}
+
+input:hover,
+textarea:hover {
+  border-color: #fff;
+}
+
+button {
+  background: #006400;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #b30000;
+  border-color: #fff;
 }
