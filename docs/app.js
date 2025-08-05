@@ -1,5 +1,6 @@
 const owner = window.location.hostname.split('.')[0];
-const repo = window.location.pathname.split('/')[1] || 'holiday-adventures';
+const repoMeta = document.querySelector('meta[name="repo"]');
+const repo = repoMeta ? repoMeta.getAttribute('content') : 'holiday-adventures';
 
 function getHolidayToken() {
   return localStorage.getItem('HOLIDAY_TOKEN') || '';
