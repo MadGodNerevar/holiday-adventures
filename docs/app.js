@@ -25,12 +25,18 @@ const repo =
 
 function initTheme() {
   const root = document.documentElement;
+  const body = document.body;
   const themeToggle = document.getElementById('theme-toggle');
   const storedTheme = localStorage.getItem('theme');
   const media = window.matchMedia('(prefers-color-scheme: dark)');
   const currentTheme = storedTheme || (media.matches ? 'dark' : 'light');
 
-  root.setAttribute('data-theme', currentTheme);
+  const applyTheme = theme => {
+    root.setAttribute('data-theme', theme);
+    if (body) body.setAttribute('data-theme', theme);
+  };
+
+  applyTheme(currentTheme);
 
   const updateToggle = theme => {
     if (themeToggle) {
@@ -43,7 +49,7 @@ function initTheme() {
   media.addEventListener('change', e => {
     if (!localStorage.getItem('theme')) {
       const newTheme = e.matches ? 'dark' : 'light';
-      root.setAttribute('data-theme', newTheme);
+      applyTheme(newTheme);
       updateToggle(newTheme);
     }
   });
@@ -51,7 +57,7 @@ function initTheme() {
   if (themeToggle) {
     themeToggle.addEventListener('click', () => {
       const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      root.setAttribute('data-theme', next);
+      applyTheme(next);
       localStorage.setItem('theme', next);
       updateToggle(next);
     });
