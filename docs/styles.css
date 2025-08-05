@@ -30,12 +30,47 @@ h2::before {
   margin-right: 0.5rem;
 }
 
-.banner {
-  text-align: center;
-  padding: 1rem;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
+.hero {
+  display: grid;
   margin-bottom: 2rem;
+}
+
+.hero-image {
+  width: 100%;
+  height: auto;
+  grid-area: 1 / 1;
+}
+
+.hero-tagline {
+  grid-area: 1 / 1;
+  place-self: center;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.main-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 0.5rem;
+  border-radius: 8px;
+}
+
+.main-nav a {
+  color: #f0c419;
+  text-decoration: none;
+}
+
+@media (max-width: 600px) {
+  .main-nav {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 #holiday-bits div {
