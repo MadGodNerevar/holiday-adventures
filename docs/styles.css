@@ -3,10 +3,10 @@
 body {
   font-family: 'Poppins', sans-serif;
   margin: 2rem;
-  background: linear-gradient(120deg, #00b4d8, #ffb703);
-  background-image: radial-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px);
+  background: linear-gradient(120deg, #c4f1f9, #ffe8d6);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 1px);
   background-size: 20px 20px;
-  color: #fff;
+  color: #222;
 }
 
 .container {
@@ -62,22 +62,40 @@ h2::before {
   justify-content: center;
   gap: 1rem;
   margin-bottom: 2rem;
-  background: rgba(0, 0, 0, 0.2);
-  padding: 0.5rem;
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 1rem;
+  border-radius: 12px;
 }
 
 .main-nav a {
-  color: #f0c419;
+  display: inline-flex; /* from Codex for icons */
+  align-items: center;  /* from Codex for icons */
+  gap: 0.25rem;         /* from Codex for icons */
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  background: #ffb703;
+  color: #023047;
   text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
+  font-weight: 700;      /* from main */
+  min-width: 44px;       /* from main */
+  min-height: 44px;      /* from main */
+  text-align: center;    /* from main */
+  transition: background-color 0.3s, color 0.3s, transform 0.2s; /* from main */
 }
 
 .main-nav a:hover {
+  background: #fb8500;   /* from main */
   color: #fff;
-  text-decoration: underline;
+  transform: translateY(-2px); /* from main */
+  text-decoration: underline;  /* from Codex */
+}
+
+.main-nav a:focus,
+.main-nav a.active {
+  outline: 3px solid #023047;  /* from main */
+  outline-offset: 2px;         /* from main */
+  background: #ffd166;         /* from main */
+  color: #023047;              /* from main */
 }
 
 @media (max-width: 600px) {
