@@ -1,8 +1,8 @@
 const owner = window.location.hostname.split('.')[0];
 const repo = window.location.pathname.split('/')[1] || 'holiday-adventures';
 
-function getToken() {
-  return localStorage.getItem('ghToken') || '';
+function getHolidayToken() {
+  return localStorage.getItem('HOLIDAY_TOKEN') || '';
 }
 
 async function loadIssues(headers) {
@@ -98,7 +98,7 @@ async function loadProjectBoard(headers) {
 }
 
 function loadData() {
-  const token = getToken();
+  const token = getHolidayToken();
   const headers = token ? { Authorization: `token ${token}` } : {};
   loadIssues(headers);
   loadProjectBoard(headers);
@@ -108,7 +108,7 @@ document.getElementById('save-token').addEventListener('click', () => {
   const tokenInput = document.getElementById('token-input');
   const val = tokenInput.value.trim();
   if (val) {
-    localStorage.setItem('ghToken', val);
+    localStorage.setItem('HOLIDAY_TOKEN', val);
     tokenInput.value = '';
     loadData();
   }
@@ -116,7 +116,7 @@ document.getElementById('save-token').addEventListener('click', () => {
 
 document.getElementById('issue-form').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const token = getToken();
+  const token = getHolidayToken();
   if (!token) {
     alert('Please save a token first.');
     return;
