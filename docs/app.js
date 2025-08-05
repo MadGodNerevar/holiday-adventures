@@ -7,24 +7,16 @@ const queryParams = new URLSearchParams(window.location.search);
 const globalConfig = window.HOLIDAY_CONFIG || {};
 const envConfig = (typeof window !== 'undefined' && (window.ENV || window.env)) || {};
 
-const ownerMeta = document.querySelector('meta[name="owner"]');
-const ownerMetaContent = ownerMeta ? ownerMeta.getAttribute('content') : null;
-const normalizedOwnerMeta = ownerMetaContent === 'YOUR_GH_USER' ? null : ownerMetaContent;
-const owner =
-  queryParams.get('owner') ||
-  globalConfig.owner ||
-  envConfig.GITHUB_OWNER ||
-  normalizedOwnerMeta ||
-  (window.location.hostname.split('.')[0] || null);
+const username = 'MadGodNerevar';
+const owner = username;
 
 const repoMeta = document.querySelector('meta[name="repo"]');
-const repo =
+let repo =
   queryParams.get('repo') ||
   globalConfig.repo ||
   envConfig.GITHUB_REPO ||
   (repoMeta ? repoMeta.getAttribute('content') : null) ||
-  window.location.pathname.split('/')[1] ||
-  'holiday-adventures';
+  'next-trip';
 
 function prefersReducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -60,6 +52,80 @@ document.addEventListener('DOMContentLoaded', initTheme);
 
 function getHolidayToken() {
   return GITHUB_TOKEN || localStorage.getItem('HOLIDAY_TOKEN') || '';
+}
+
+async function loadUserProjects() {
+  const selector = document.getElementById('project-selector');
+  if (!selector) return;
+  try {
+    const res = await fetch(`https://api.github.com/users/${owner}/repos`);
+    if (!res.ok) throw new Error('Failed to load repositories');
+    const projects = await res.json();
+    selector.innerHTML = '';
+    projects.forEach(p => {
+      const option = document.createElement('option');
+      option.value = p.name;
+      option.textContent = p.name.replace(/-/g, ' ');
+      selector.appendChild(option);
+    });
+    selector.value = repo;
+  } catch (err) {
+    console.error('loadUserProjects:', err);
+  }
+}
+
+async function loadProjectDetails(project) {
+  const descEl = document.getElementById('project-description');
+  const milestonesEl = document.getElementById('project-milestones');
+  const issuesEl = document.getElementById('project-issues');
+  if (descEl) descEl.textContent = '';
+  if (milestonesEl) milestonesEl.innerHTML = '';
+  if (issuesEl) issuesEl.innerHTML = '';
+  try {
+    const repoRes = await fetch(`https://api.github.com/repos/${owner}/${project}`);
+    if (repoRes.ok && descEl) {
+      const repoData = await repoRes.json();
+      descEl.textContent = repoData.description || 'No description provided';
+    }
+
+    const milestoneRes = await fetch(`https://api.github.com/repos/${owner}/${project}/milestones`);
+    if (milestoneRes.ok && milestonesEl) {
+      const milestones = await milestoneRes.json();
+      if (milestones.length) {
+        milestones.forEach(m => {
+          const li = document.createElement('li');
+          li.textContent = `${m.title} (${m.state})`;
+          milestonesEl.appendChild(li);
+        });
+      } else {
+        const li = document.createElement('li');
+        li.textContent = 'No milestones found';
+        milestonesEl.appendChild(li);
+      }
+    }
+
+    const issuesRes = await fetch(`https://api.github.com/repos/${owner}/${project}/issues`);
+    if (issuesRes.ok && issuesEl) {
+      const issues = await issuesRes.json();
+      if (issues.length) {
+        issues.forEach(issue => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = issue.html_url;
+          a.textContent = issue.title;
+          a.target = '_blank';
+          li.appendChild(a);
+          issuesEl.appendChild(li);
+        });
+      } else {
+        const li = document.createElement('li');
+        li.textContent = 'No issues found';
+        issuesEl.appendChild(li);
+      }
+    }
+  } catch (err) {
+    console.error('loadProjectDetails:', err);
+  }
 }
 
 async function loadTasks(headers) {
@@ -430,6 +496,15 @@ if (saveBtn) {
   });
 }
 
+const projectSelector = document.getElementById('project-selector');
+if (projectSelector) {
+  projectSelector.addEventListener('change', e => {
+    repo = e.target.value || 'next-trip';
+    loadProjectDetails(repo);
+    loadData();
+  });
+}
+
 const taskForm = document.getElementById('task-form');
 if (taskForm) {
   taskForm.addEventListener('submit', async (e) => {
@@ -507,6 +582,7 @@ if (itineraryForm) {
 
 // Initial load
 document.addEventListener('DOMContentLoaded', () => {
+  loadUserProjects().then(() => loadProjectDetails(repo));
   loadData();
   updateActiveNav();
   initAnimations();

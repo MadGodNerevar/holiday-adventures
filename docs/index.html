@@ -22,6 +22,7 @@
     </header>
 
   <nav class="main-nav">
+    <a href="#projects"><span class="nav-icon">📁</span>Projects</a>
     <a href="#tasks"><span class="nav-icon">📝</span>Tasks</a>
     <a href="#project-board"><span class="nav-icon">📋</span>Project Board</a>
     <a href="#holiday-bits"><span class="nav-icon">🎒</span>Holiday Bits</a>
@@ -45,6 +46,17 @@
       <label for="token-input">Personal Access Token</label>
       <input type="password" id="token-input" placeholder="HOLIDAY_TOKEN" />
       <button id="save-token">Save Token</button>
+    </section>
+
+    <section id="projects">
+      <h2>Projects</h2>
+      <label for="project-selector">Choose a project</label>
+      <select id="project-selector"></select>
+      <p id="project-description"></p>
+      <h3>Milestones</h3>
+      <ul id="project-milestones"></ul>
+      <h3>Issues</h3>
+      <ul id="project-issues"></ul>
     </section>
 
     <section id="tasks">
