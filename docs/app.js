@@ -616,6 +616,48 @@ function initImageFallback() {
   });
 }
 
+async function createProject(title) {
+  const token = getHolidayToken();
+  if (!token) {
+    alert('Please save a token first.');
+    return;
+  }
+  const headers = { Authorization: `bearer ${token}`, 'Content-Type': 'application/json' };
+  const ownerQuery = `
+    query($login: String!) {
+      user(login: $login) { id }
+    }
+  `;
+  const ownerRes = await fetch('https://api.github.com/graphql', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ query: ownerQuery, variables: { login: owner } })
+  });
+  const ownerData = await ownerRes.json();
+  const ownerId = ownerData?.data?.user?.id;
+  if (!ownerId) throw new Error('Unable to determine owner ID');
+  const mutation = `
+    mutation($input: CreateProjectV2Input!) {
+      createProjectV2(input: $input) {
+        projectV2 { id title }
+      }
+    }
+  `;
+  const res = await fetch('https://api.github.com/graphql', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      query: mutation,
+      variables: { input: { ownerId, title } }
+    })
+  });
+  const data = await res.json();
+  if (data.errors) {
+    throw new Error(data.errors.map(e => e.message).join(', '));
+  }
+  return data.data?.createProjectV2?.projectV2;
+}
+
 const saveBtn = document.getElementById('save-token');
 if (saveBtn) {
   saveBtn.addEventListener('click', () => {
@@ -629,6 +671,25 @@ if (saveBtn) {
   });
 }
 
+
+const projectForm = document.getElementById('new-project-form');
+if (projectForm) {
+  projectForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const title = document.getElementById('project-title').value.trim();
+    const resultEl = document.getElementById('project-create-result');
+    try {
+      const project = await createProject(title);
+      if (project) {
+        if (resultEl) resultEl.textContent = `Project "${project.title}" created`;
+        projectForm.reset();
+        loadData();
+      }
+    } catch (err) {
+      if (resultEl) resultEl.textContent = `Error: ${err.message}`;
+    }
+  });
+}
 
 const taskForm = document.getElementById('task-form');
 if (taskForm) {
