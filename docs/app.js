@@ -10,13 +10,7 @@ const envConfig = (typeof window !== 'undefined' && (window.ENV || window.env)) 
 const username = 'MadGodNerevar';
 const owner = username;
 
-const repoMeta = document.querySelector('meta[name="repo"]');
-let repo =
-  queryParams.get('repo') ||
-  globalConfig.repo ||
-  envConfig.GITHUB_REPO ||
-  (repoMeta ? repoMeta.getAttribute('content') : null) ||
-  'next-trip';
+const repo = 'holiday-adventures';
 
 // Access key for Unsplash API (required for destination images)
 const unsplashAccessKey =
@@ -539,14 +533,6 @@ if (saveBtn) {
   });
 }
 
-const projectSelector = document.getElementById('project-selector');
-if (projectSelector) {
-  projectSelector.addEventListener('change', e => {
-    repo = e.target.value || 'next-trip';
-    loadProjectDetails(repo);
-    loadData();
-  });
-}
 
 const taskForm = document.getElementById('task-form');
 if (taskForm) {
