@@ -10,13 +10,7 @@ const envConfig = (typeof window !== 'undefined' && (window.ENV || window.env)) 
 const username = 'MadGodNerevar';
 const owner = username;
 
-const repoMeta = document.querySelector('meta[name="repo"]');
-let repo =
-  queryParams.get('repo') ||
-  globalConfig.repo ||
-  envConfig.GITHUB_REPO ||
-  (repoMeta ? repoMeta.getAttribute('content') : null) ||
-  'next-trip';
+const repo = 'holiday-adventures';
 
 // Access key for Unsplash API (required for destination images)
 const unsplashAccessKey =
@@ -58,26 +52,6 @@ function initTheme() {
 
 function getHolidayToken() {
   return GITHUB_TOKEN || localStorage.getItem('HOLIDAY_TOKEN') || '';
-}
-
-async function loadUserProjects() {
-  const selector = document.getElementById('project-selector');
-  if (!selector) return;
-  try {
-    const res = await fetch(`https://api.github.com/users/${owner}/repos`);
-    if (!res.ok) throw new Error('Failed to load repositories');
-    const projects = await res.json();
-    selector.innerHTML = '';
-    projects.forEach(p => {
-      const option = document.createElement('option');
-      option.value = p.name;
-      option.textContent = p.name.replace(/-/g, ' ');
-      selector.appendChild(option);
-    });
-    selector.value = repo;
-  } catch (err) {
-    console.error('loadUserProjects:', err);
-  }
 }
 
 async function loadProjectDetails(project) {
@@ -530,14 +504,6 @@ if (saveBtn) {
   });
 }
 
-const projectSelector = document.getElementById('project-selector');
-if (projectSelector) {
-  projectSelector.addEventListener('change', e => {
-    repo = e.target.value || 'next-trip';
-    loadProjectDetails(repo);
-    loadData();
-  });
-}
 
 const taskForm = document.getElementById('task-form');
 if (taskForm) {
@@ -616,7 +582,7 @@ if (itineraryForm) {
 
 // Initial load
 document.addEventListener('DOMContentLoaded', () => {
-  loadUserProjects().then(() => loadProjectDetails(repo));
+  loadProjectDetails('holiday-adventures');
   loadData();
   updateActiveNav();
   initAnimations();
