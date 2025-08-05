@@ -1,6 +1,6 @@
 # 🌴 Mersea Island Weekend — July 2025
 
-A collaborative GitHub Project overview for our romantic Mersea Island escape 🏖️💜
+A collaborative GitHub Project overview for our Mersea Island escape 🏖️💜
 
 ---
 
@@ -29,7 +29,7 @@ A collaborative GitHub Project overview for our romantic Mersea Island escape �
 
 ## ✅ Done
 - [x] Repo created and shared ✅  
-- [x] Romantic playlist created on Spotify ✅  
+- [x] Playlist created on Spotify ✅  
 - [x] Mersea island markdown added ✅  
 
 ---
