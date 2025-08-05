@@ -10,13 +10,7 @@ const envConfig = (typeof window !== 'undefined' && (window.ENV || window.env)) 
 const username = 'MadGodNerevar';
 const owner = username;
 
-const repoMeta = document.querySelector('meta[name="repo"]');
-let repo =
-  queryParams.get('repo') ||
-  globalConfig.repo ||
-  envConfig.GITHUB_REPO ||
-  (repoMeta ? repoMeta.getAttribute('content') : null) ||
-  'next-trip';
+const repo = 'holiday-adventures';
 
 // Access key for Unsplash API (required for destination images)
 const unsplashAccessKey =
@@ -63,24 +57,16 @@ function getHolidayToken() {
   return GITHUB_TOKEN || localStorage.getItem('HOLIDAY_TOKEN') || '';
 }
 
-async function loadUserProjects() {
+function loadUserProjects() {
   const selector = document.getElementById('project-selector');
   if (!selector) return;
-  try {
-    const res = await fetch(`https://api.github.com/users/${owner}/repos`);
-    if (!res.ok) throw new Error('Failed to load repositories');
-    const projects = await res.json();
-    selector.innerHTML = '';
-    projects.forEach(p => {
-      const option = document.createElement('option');
-      option.value = p.name;
-      option.textContent = p.name.replace(/-/g, ' ');
-      selector.appendChild(option);
-    });
-    selector.value = repo;
-  } catch (err) {
-    console.error('loadUserProjects:', err);
-  }
+  selector.innerHTML = '';
+  const option = document.createElement('option');
+  option.value = 'holiday-adventures';
+  option.textContent = 'holiday adventures';
+  selector.appendChild(option);
+  selector.value = 'holiday-adventures';
+  selector.style.display = 'none';
 }
 
 async function loadProjectDetails(project) {
@@ -339,11 +325,16 @@ async function loadHolidayBits(headers) {
       files.forEach(file => {
         if (file.type === 'file') {
           const li = document.createElement('li');
-          const a = document.createElement('a');
-          a.href = file.html_url;
-          a.textContent = file.name;
-          a.target = '_blank';
-          li.appendChild(a);
+          const name = file.name.replace(/\.md$/, '').replace(/-/g, ' ');
+          if (file.name.endsWith('.md')) {
+            li.textContent = name;
+          } else {
+            const a = document.createElement('a');
+            a.href = file.html_url;
+            a.textContent = name;
+            a.target = '_blank';
+            li.appendChild(a);
+          }
           ul.appendChild(li);
         }
       });
@@ -630,6 +621,18 @@ function initAOS() {
   if (window.AOS) AOS.init();
 }
 
+function initImageFallback() {
+  const images = document.querySelectorAll('img');
+  images.forEach(img => {
+    img.addEventListener('error', () => {
+      if (!img.dataset.fallback) {
+        img.dataset.fallback = 'true';
+        img.src = 'assets/placeholder.svg';
+      }
+    });
+  });
+}
+
 const saveBtn = document.getElementById('save-token');
 if (saveBtn) {
   saveBtn.addEventListener('click', () => {
@@ -643,14 +646,6 @@ if (saveBtn) {
   });
 }
 
-const projectSelector = document.getElementById('project-selector');
-if (projectSelector) {
-  projectSelector.addEventListener('change', e => {
-    repo = e.target.value || 'next-trip';
-    loadProjectDetails(repo);
-    loadData();
-  });
-}
 
 const taskForm = document.getElementById('task-form');
 if (taskForm) {
@@ -735,14 +730,17 @@ if (itineraryForm) {
 
 // Initial load
 document.addEventListener('DOMContentLoaded', () => {
-  initItineraryMap();
-  loadUserProjects().then(() => loadProjectDetails(repo));
+  const selector = document.getElementById('project-selector');
+  if (selector) selector.style.display = 'none';
+  repo = 'holiday-adventures';
+  loadProjectDetails('holiday-adventures');
   loadData();
   updateActiveNav();
   initAnimations();
   initSectionObserver();
   initPlanner();
   initAOS();
+  initImageFallback();
 });
 window.addEventListener('scroll', () => {
   updateActiveNav();
