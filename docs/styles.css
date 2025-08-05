@@ -4,7 +4,7 @@
   --sunset: #ffb703;
   --sand: #f4e1d2;
   --bg-color: var(--sand);
-  --text-color: #222;
+  --color-text: #222;
   --card-bg: #ffffff;
 
   /* Section defaults */
@@ -65,7 +65,7 @@
 
   /* Color tokens */
   --color-primary: var(--sunset);
-  --color-secondary: var(--text-color);
+  --color-secondary: var(--color-text);
   --color-accent: #ff6f61;
   --color-accent-light: #ff8c82;
   --color-text-inverse: #0d1b2a;
