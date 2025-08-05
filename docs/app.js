@@ -57,18 +57,6 @@ function getHolidayToken() {
   return GITHUB_TOKEN || localStorage.getItem('HOLIDAY_TOKEN') || '';
 }
 
-function loadUserProjects() {
-  const selector = document.getElementById('project-selector');
-  if (!selector) return;
-  selector.innerHTML = '';
-  const option = document.createElement('option');
-  option.value = 'holiday-adventures';
-  option.textContent = 'holiday adventures';
-  selector.appendChild(option);
-  selector.value = 'holiday-adventures';
-  selector.style.display = 'none';
-}
-
 async function loadProjectDetails(project) {
   const descEl = document.getElementById('project-description');
   const milestonesEl = document.getElementById('project-milestones');
@@ -264,29 +252,10 @@ async function loadProjectBoard(headers) {
       projectDiv.appendChild(columnsContainer);
       boardEl.appendChild(projectDiv);
     }
-    populateProjectSelector(projects);
   } catch (err) {
     boardEl.textContent = 'Projects could not be loaded.';
     console.error(err);
   }
-}
-
-function populateProjectSelector(projects) {
-  const select = document.getElementById('project-select');
-  if (!select) return;
-  select.innerHTML = '<option value="">All Projects</option>';
-  projects.forEach(p => {
-    const opt = document.createElement('option');
-    opt.value = p.title;
-    opt.textContent = p.title;
-    select.appendChild(opt);
-  });
-  select.addEventListener('change', e => {
-    const value = e.target.value;
-    document.querySelectorAll('#project-board .project').forEach(div => {
-      div.style.display = !value || div.dataset.title === value ? '' : 'none';
-    });
-  });
 }
 
 async function loadHolidayBits(headers) {
@@ -730,8 +699,6 @@ if (itineraryForm) {
 
 // Initial load
 document.addEventListener('DOMContentLoaded', () => {
-  const selector = document.getElementById('project-selector');
-  if (selector) selector.style.display = 'none';
   repo = 'holiday-adventures';
   loadProjectDetails('holiday-adventures');
   loadData();
