@@ -218,13 +218,23 @@ textarea:hover {
   border-color: #fff;
 }
 
+input:focus,
+textarea:focus {
+  border-color: #0077b6;
+  outline: 3px solid #0077b6;
+  outline-offset: 2px;
+}
+
 button {
   background: #006400;
   color: #fff;
   cursor: pointer;
 }
 
-button:hover {
-  background: #b30000;
-  border-color: #fff;
+button:hover,
+button:focus {
+  background: #008000;
+  border-color: #ffeb3b;
+  outline: 3px solid #ffeb3b;
+  outline-offset: 2px;
 }
