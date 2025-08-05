@@ -103,6 +103,7 @@ h1, h2, h3 {
   margin-top: 0;
   margin-bottom: var(--space-md);
   color: var(--color-primary);
+  line-height: 1.2;
 }
 
 h1 {
@@ -117,6 +118,11 @@ h3 {
   font-size: var(--font-size-md);
 }
 
+p {
+  margin-top: 0;
+  margin-bottom: var(--space-md);
+}
+
 .banner {
   display: flex;
   justify-content: space-between;
@@ -128,19 +134,6 @@ h3 {
 
 section {
   margin-bottom: var(--space-xl);
-  border: 1px solid var(--section-border);
-  padding: var(--space-lg);
-  border-radius: 8px;
-  box-shadow: 0 1px 3px var(--section-shadow);
-  color: var(--section-text);
-}
-
-section:nth-of-type(odd) {
-  background: var(--section-bg-odd);
-}
-
-section:nth-of-type(even) {
-  background: var(--section-bg-even);
 }
 
 .section-hidden {
@@ -298,8 +291,8 @@ h2::before {
 .card {
   background: var(--color-surface);
   border-radius: 8px;
-  box-shadow: 0 1px 3px var(--section-shadow);
-  padding: var(--space-lg);
+  box-shadow: 0 2px 4px var(--section-shadow);
+  padding: var(--space-xl);
 }
 
 button {
@@ -318,19 +311,20 @@ button:hover {
 
 .dashboard-grid {
   display: grid;
-  gap: var(--space-lg);
+  gap: var(--space-xl);
   grid-template-columns: 1fr;
+  align-items: start;
 }
 
 .widgets {
   display: flex;
   flex-direction: column;
-  gap: var(--space-lg);
+  gap: var(--space-xl);
 }
 
 @media (min-width: 768px) {
   .dashboard-grid {
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 3fr 2fr;
   }
 }
 
@@ -364,7 +358,7 @@ form.card button {
 }
 
 [data-theme="dark"] .card {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
 }
 
 /* Additional layout and animation sections */
