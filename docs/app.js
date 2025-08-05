@@ -54,6 +54,18 @@ function getHolidayToken() {
   return GITHUB_TOKEN || localStorage.getItem('HOLIDAY_TOKEN') || '';
 }
 
+function loadUserProjects() {
+  const selector = document.getElementById('project-selector');
+  if (!selector) return;
+  selector.innerHTML = '';
+  const option = document.createElement('option');
+  option.value = 'holiday-adventures';
+  option.textContent = 'holiday adventures';
+  selector.appendChild(option);
+  selector.value = 'holiday-adventures';
+  selector.style.display = 'none';
+}
+
 async function loadProjectDetails(project) {
   const descEl = document.getElementById('project-description');
   const milestonesEl = document.getElementById('project-milestones');
@@ -310,11 +322,16 @@ async function loadHolidayBits(headers) {
       files.forEach(file => {
         if (file.type === 'file') {
           const li = document.createElement('li');
-          const a = document.createElement('a');
-          a.href = file.html_url;
-          a.textContent = file.name;
-          a.target = '_blank';
-          li.appendChild(a);
+          const name = file.name.replace(/\.md$/, '').replace(/-/g, ' ');
+          if (file.name.endsWith('.md')) {
+            li.textContent = name;
+          } else {
+            const a = document.createElement('a');
+            a.href = file.html_url;
+            a.textContent = name;
+            a.target = '_blank';
+            li.appendChild(a);
+          }
           ul.appendChild(li);
         }
       });
@@ -491,6 +508,18 @@ function initAOS() {
   if (window.AOS) AOS.init();
 }
 
+function initImageFallback() {
+  const images = document.querySelectorAll('img');
+  images.forEach(img => {
+    img.addEventListener('error', () => {
+      if (!img.dataset.fallback) {
+        img.dataset.fallback = 'true';
+        img.src = 'assets/placeholder.svg';
+      }
+    });
+  });
+}
+
 const saveBtn = document.getElementById('save-token');
 if (saveBtn) {
   saveBtn.addEventListener('click', () => {
@@ -582,6 +611,9 @@ if (itineraryForm) {
 
 // Initial load
 document.addEventListener('DOMContentLoaded', () => {
+  const selector = document.getElementById('project-selector');
+  if (selector) selector.style.display = 'none';
+  repo = 'holiday-adventures';
   loadProjectDetails('holiday-adventures');
   loadData();
   updateActiveNav();
@@ -589,6 +621,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSectionObserver();
   initPlanner();
   initAOS();
+  initImageFallback();
 });
 window.addEventListener('scroll', () => {
   updateActiveNav();
