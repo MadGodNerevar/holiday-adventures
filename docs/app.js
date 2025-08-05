@@ -23,6 +23,10 @@ const repo =
   window.location.pathname.split('/')[1] ||
   'holiday-adventures';
 
+function prefersReducedMotion() {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
 function initTheme() {
   const root = document.documentElement;
   const selector = document.getElementById('theme-selector');
@@ -281,6 +285,55 @@ function updateActiveNav() {
   links.forEach(link => link.classList.toggle('active', link === activeLink));
 }
 
+function startHeroSlideshow() {
+  const slides = document.querySelectorAll('.hero-slideshow img');
+  if (!slides.length) return;
+  let index = 0;
+  slides[index].classList.add('active');
+  if (prefersReducedMotion() || slides.length === 1) return;
+  setInterval(() => {
+    slides[index].classList.remove('active');
+    index = (index + 1) % slides.length;
+    slides[index].classList.add('active');
+  }, 5000);
+}
+
+function initAnimations() {
+  if (!prefersReducedMotion() && window.gsap) {
+    gsap.from('.main-nav a', { y: -20, opacity: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out' });
+    gsap.from('.hero-tagline', { y: 50, opacity: 0, duration: 1, ease: 'power2.out' });
+  }
+  startHeroSlideshow();
+}
+
+function handleHeroScroll() {
+  if (prefersReducedMotion() || !window.gsap) return;
+  const tagline = document.querySelector('.hero-tagline');
+  if (!tagline) return;
+  const offset = Math.min(window.scrollY, 200);
+  gsap.to(tagline, { y: offset * 0.2, opacity: 1 - offset / 200, overwrite: 'auto', duration: 0.3 });
+}
+
+function initSectionObserver() {
+  if (!('IntersectionObserver' in window)) return;
+  const sections = document.querySelectorAll('section');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('section-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  sections.forEach(sec => {
+    if (!sec.classList.contains('hero')) {
+      sec.classList.add('section-hidden');
+      observer.observe(sec);
+    }
+  });
+}
+
 const saveBtn = document.getElementById('save-token');
 if (saveBtn) {
   saveBtn.addEventListener('click', () => {
@@ -330,5 +383,10 @@ if (taskForm) {
 document.addEventListener('DOMContentLoaded', () => {
   loadData();
   updateActiveNav();
+  initAnimations();
+  initSectionObserver();
 });
-window.addEventListener('scroll', updateActiveNav);
+window.addEventListener('scroll', () => {
+  updateActiveNav();
+  handleHeroScroll();
+});
