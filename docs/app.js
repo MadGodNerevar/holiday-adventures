@@ -7,12 +7,14 @@ const globalConfig = window.HOLIDAY_CONFIG || {};
 const envConfig = (typeof window !== 'undefined' && (window.ENV || window.env)) || {};
 
 const ownerMeta = document.querySelector('meta[name="owner"]');
+const ownerMetaContent = ownerMeta ? ownerMeta.getAttribute('content') : null;
+const normalizedOwnerMeta = ownerMetaContent === 'YOUR_GH_USER' ? null : ownerMetaContent;
 const owner =
   queryParams.get('owner') ||
   globalConfig.owner ||
   envConfig.GITHUB_OWNER ||
-  (ownerMeta ? ownerMeta.getAttribute('content') : null) ||
-  window.location.hostname.split('.')[0];
+  normalizedOwnerMeta ||
+  (window.location.hostname.split('.')[0] || null);
 
 const repoMeta = document.querySelector('meta[name="repo"]');
 const repo =
@@ -262,18 +264,30 @@ async function loadHolidayBits(headers) {
   }
 }
 
-function loadData() {
-  const token = getHolidayToken();
-  let headers = {};
-  if (token) {
-    // Fine-grained PATs start with `github_pat_`; otherwise assume classic PAT
-    const isFineGrained = token.startsWith('github_pat_');
-    headers = { Authorization: `${isFineGrained ? 'Bearer' : 'token'} ${token}` };
+  function loadData() {
+    if (!owner) {
+      console.warn('GitHub owner could not be determined. Please configure it.');
+      let warnEl = document.getElementById('config-warning');
+      if (!warnEl) {
+        warnEl = document.createElement('div');
+        warnEl.id = 'config-warning';
+        warnEl.textContent = 'GitHub owner is not configured. Please set it via ?owner= or a meta tag.';
+        const container = document.querySelector('.container') || document.body;
+        container.insertBefore(warnEl, container.firstChild);
+      }
+      return;
+    }
+    const token = getHolidayToken();
+    let headers = {};
+    if (token) {
+      // Fine-grained PATs start with `github_pat_`; otherwise assume classic PAT
+      const isFineGrained = token.startsWith('github_pat_');
+      headers = { Authorization: `${isFineGrained ? 'Bearer' : 'token'} ${token}` };
+    }
+    loadTasks(headers);
+    loadProjectBoard(headers);
+    loadHolidayBits(headers);
   }
-  loadTasks(headers);
-  loadProjectBoard(headers);
-  loadHolidayBits(headers);
-}
 
 function updateActiveNav() {
   const links = document.querySelectorAll('.main-nav a');
