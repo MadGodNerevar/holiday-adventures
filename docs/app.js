@@ -1,7 +1,8 @@
 // Configuration for repository information
-// Hardcode the GitHub username and allow the repository to be overridden
-// via query parameters or meta tags. Defaults to "next-trip" when none is
-// provided.
+// Allow overrides via query parameters (e.g., ?owner=user&repo=project),
+// a global config object `window.HOLIDAY_CONFIG`, or environment variables
+// exposed on `window.ENV`. Falls back to parsing the current URL.
+import { GITHUB_TOKEN } from './config.js';
 const queryParams = new URLSearchParams(window.location.search);
 const globalConfig = window.HOLIDAY_CONFIG || {};
 const envConfig = (typeof window !== 'undefined' && (window.ENV || window.env)) || {};
@@ -50,7 +51,7 @@ function initTheme() {
 document.addEventListener('DOMContentLoaded', initTheme);
 
 function getHolidayToken() {
-  return localStorage.getItem('HOLIDAY_TOKEN') || '';
+  return GITHUB_TOKEN || localStorage.getItem('HOLIDAY_TOKEN') || '';
 }
 
 async function loadUserProjects() {
@@ -325,6 +326,73 @@ async function loadHolidayBits(headers) {
   }
 }
 
+async function loadItinerary(headers) {
+  const timelineEl = document.getElementById('itinerary-timeline');
+  if (!timelineEl) return;
+  timelineEl.innerHTML = '';
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${owner}/${repo}/issues?labels=itinerary&per_page=100`,
+      { headers }
+    );
+    if (!res.ok) {
+      timelineEl.textContent = 'No itinerary entries found.';
+      return;
+    }
+    const items = await res.json();
+    items.forEach(issue => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'itinerary-item';
+      let data = {};
+      try {
+        data = issue.body ? JSON.parse(issue.body) : {};
+      } catch (_) {
+        data = {};
+      }
+      const title = document.createElement('h3');
+      title.textContent = issue.title;
+      wrapper.appendChild(title);
+      if (data.photo) {
+        const img = document.createElement('img');
+        img.src = data.photo;
+        img.alt = issue.title;
+        img.loading = 'lazy';
+        wrapper.appendChild(img);
+      }
+      const fields = [
+        ['Activities', data.activities],
+        ['Budget', data.budget],
+        ['Notes', data.notes]
+      ];
+      fields.forEach(([label, val]) => {
+        if (val) {
+          const p = document.createElement('p');
+          p.innerHTML = `<strong>${label}:</strong> ${val}`;
+          wrapper.appendChild(p);
+        }
+      });
+      const editBtn = document.createElement('button');
+      editBtn.textContent = 'Edit';
+      editBtn.addEventListener('click', () => {
+        const form = document.getElementById('itinerary-form');
+        if (!form) return;
+        document.getElementById('itinerary-issue-number').value = issue.number;
+        document.getElementById('itinerary-destination').value = issue.title;
+        document.getElementById('itinerary-activities').value = data.activities || '';
+        document.getElementById('itinerary-budget').value = data.budget || '';
+        document.getElementById('itinerary-photo').value = data.photo || '';
+        document.getElementById('itinerary-notes').value = data.notes || '';
+        form.scrollIntoView({ behavior: 'smooth' });
+      });
+      wrapper.appendChild(editBtn);
+      timelineEl.appendChild(wrapper);
+    });
+  } catch (err) {
+    timelineEl.textContent = 'Unable to load itinerary.';
+    console.error('loadItinerary:', err && err.message ? err.message : err);
+  }
+}
+
   function loadData() {
     if (!owner) {
       console.warn('GitHub owner could not be determined. Please configure it.');
@@ -348,6 +416,7 @@ async function loadHolidayBits(headers) {
     loadTasks(headers);
     loadProjectBoard(headers);
     loadHolidayBits(headers);
+    loadItinerary(headers);
   }
 
 function updateActiveNav() {
@@ -460,6 +529,49 @@ if (taskForm) {
       const data = await res.json();
       resultEl.innerHTML = `Task created: <a href="${data.html_url}" target="_blank">${data.number}</a>`;
       taskForm.reset();
+      loadData();
+    } else {
+      const err = await res.json();
+      resultEl.textContent = `Error: ${err.message}`;
+    }
+  });
+}
+
+const itineraryForm = document.getElementById('itinerary-form');
+if (itineraryForm) {
+  itineraryForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const token = getHolidayToken();
+    if (!token) {
+      alert('Please save a token first.');
+      return;
+    }
+    const number = document.getElementById('itinerary-issue-number').value.trim();
+    const destination = document.getElementById('itinerary-destination').value;
+    const activities = document.getElementById('itinerary-activities').value;
+    const budget = document.getElementById('itinerary-budget').value;
+    const photo = document.getElementById('itinerary-photo').value;
+    const notes = document.getElementById('itinerary-notes').value;
+    const bodyObj = { activities, budget, photo, notes };
+    const url = `https://api.github.com/repos/${owner}/${repo}/issues${number ? '/' + number : ''}`;
+    const method = number ? 'PATCH' : 'POST';
+    const payload = number
+      ? { title: destination, body: JSON.stringify(bodyObj, null, 2) }
+      : { title: destination, body: JSON.stringify(bodyObj, null, 2), labels: ['itinerary'] };
+    const res = await fetch(url, {
+      method,
+      headers: {
+        Authorization: `token ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+    const resultEl = document.getElementById('itinerary-result');
+    if (res.ok) {
+      const data = await res.json();
+      resultEl.innerHTML = `Entry saved: <a href="${data.html_url}" target="_blank">#${data.number}</a>`;
+      itineraryForm.reset();
+      document.getElementById('itinerary-issue-number').value = '';
       loadData();
     } else {
       const err = await res.json();
