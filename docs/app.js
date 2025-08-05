@@ -29,7 +29,6 @@ function initTheme() {
   const storedTheme = localStorage.getItem('theme');
   const media = window.matchMedia('(prefers-color-scheme: dark)');
   const currentTheme = storedTheme || (media.matches ? 'dark' : 'light');
-
   root.setAttribute('data-theme', currentTheme);
   if (selector) selector.value = currentTheme;
 
