@@ -6,10 +6,12 @@ const queryParams = new URLSearchParams(window.location.search);
 const globalConfig = window.HOLIDAY_CONFIG || {};
 const envConfig = (typeof window !== 'undefined' && (window.ENV || window.env)) || {};
 
+const ownerMeta = document.querySelector('meta[name="owner"]');
 const owner =
   queryParams.get('owner') ||
   globalConfig.owner ||
   envConfig.GITHUB_OWNER ||
+  (ownerMeta ? ownerMeta.getAttribute('content') : null) ||
   window.location.hostname.split('.')[0];
 
 const repoMeta = document.querySelector('meta[name="repo"]');
