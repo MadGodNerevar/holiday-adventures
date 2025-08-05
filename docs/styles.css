@@ -42,14 +42,137 @@ h1, h2, h3 {
   padding: 1rem 2rem;
 }
 
-#dark-mode-toggle {
-  background: var(--coral);
-  border: none;
-  color: #fff;
-  border-radius: 50%;
-  width: 2.5rem;
-  height: 2.5rem;
-  cursor: pointer;
+section {
+  margin-bottom: 2rem;
+  border: 1px solid var(--section-border);
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px var(--section-shadow);
+  color: var(--section-text);
+}
+
+section:nth-of-type(odd) {
+  background: var(--section-bg-odd);
+}
+
+section:nth-of-type(even) {
+  background: var(--section-bg-even);
+}
+
+.section-hidden {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.section-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-visible {
+    transition: none;
+  }
+}
+
+.section-image {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  display: block;
+  margin: 0.5rem auto 1rem;
+  box-shadow: 0 2px 4px var(--section-image-shadow);
+  border-radius: 8px;
+}
+
+h1,
+h2 {
+  font-family: 'Poppins', sans-serif;
+  color: var(--color-primary);
+  text-shadow: 1px 1px 2px #000;
+}
+
+h2::before {
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+
+#token h2::before {
+  content: '🔐';
+}
+
+#tasks h2::before {
+  content: '📋';
+}
+
+#project-board h2::before {
+  content: '🗂️';
+}
+
+#holiday-bits h2::before {
+  content: '🧳';
+}
+
+#new-task h2::before {
+  content: '➕';
+}
+
+#destination-highlights h2::before {
+  content: '📸';
+}
+
+.hero {
+  display: grid;
+  margin-bottom: 2rem;
+  position: relative;
+  height: 40vh;
+}
+
+.hero-slideshow {
+  grid-area: 1 / 1;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-slideshow img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.hero-slideshow img.active {
+  opacity: 1;
+}
+
+.hero-tagline {
+  grid-area: 1 / 1;
+  place-self: center;
+  text-align: center;
+  background: var(--hero-tagline-bg);
+  padding: 1rem;
+  border-radius: 8px;
+  will-change: transform, opacity;
+  z-index: 1;
+}
+
+@media (max-width: 600px) {
+  .hero {
+    height: 30vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-slideshow img {
+    transition: none;
+  }
 }
 
 .main-nav {
@@ -152,4 +275,120 @@ button:hover {
 
 [data-theme="dark"] .card {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+/* Additional layout and animation sections */
+.hero-cta {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.hero-cta button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  background: var(--color-accent);
+  color: var(--color-text-inverse);
+  font-weight: 700;
+  will-change: transform, opacity;
+}
+
+.hero-cta button:hover {
+  background: var(--color-accent-light);
+}
+
+#project-selector {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+#project-selector select {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  background: var(--input-bg);
+  color: var(--input-text);
+}
+
+#planner .progress-wrapper {
+  width: 100%;
+  height: 1rem;
+  background: var(--color-surface);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+#planner-progress {
+  width: 0%;
+  height: 100%;
+  background: var(--color-primary);
+}
+
+#planner-tasks {
+  list-style: none;
+  padding: 0;
+}
+
+#planner-tasks li {
+  margin: 0.5rem 0;
+}
+
+.timeline {
+  position: relative;
+  margin-left: 1rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--color-primary);
+}
+
+.timeline-item {
+  margin-bottom: 1rem;
+}
+
+.timeline-date {
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.destinations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.destination {
+  background: var(--color-surface);
+  padding: 0.5rem;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 4px var(--section-shadow);
+}
+
+.destination img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+}
+
+.site-footer {
+  background: linear-gradient(90deg, var(--color-bg-start), var(--color-bg-end));
+  padding: 1.5rem;
+  margin-top: 2rem;
+  text-align: center;
+  color: var(--color-secondary);
+}
+
+.site-footer .social-icons a {
+  margin: 0 0.5rem;
+  color: var(--color-secondary);
+  font-size: 1.5rem;
+  text-decoration: none;
+}
+
+.site-footer .social-icons a:hover {
+  color: var(--color-accent);
 }
