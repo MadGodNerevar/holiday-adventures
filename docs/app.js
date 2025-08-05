@@ -27,15 +27,20 @@ function getHolidayToken() {
 }
 
 async function loadTasks(headers) {
-  const listEl = document.getElementById('tasks-list');
-  if (!listEl) {
-    console.warn('Tasks list element not found');
-    return;
-  }
-  listEl.innerHTML = '';
   try {
+    const listEl = document.getElementById('tasks-list');
+    if (!listEl) {
+      console.warn('Tasks list element not found');
+      return;
+    }
+    listEl.innerHTML = '';
     const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, { headers });
-    if (!res.ok) throw new Error('Failed to fetch tasks');
+    if (!res.ok) {
+      const li = document.createElement('li');
+      li.textContent = 'No tasks found';
+      listEl.appendChild(li);
+      return;
+    }
     const tasks = await res.json();
     tasks.forEach(task => {
       const li = document.createElement('li');
@@ -47,10 +52,13 @@ async function loadTasks(headers) {
       listEl.appendChild(li);
     });
   } catch (err) {
-    const li = document.createElement('li');
-    li.textContent = 'Unable to load tasks';
-    listEl.appendChild(li);
-    console.error(err);
+    const listEl = document.getElementById('tasks-list');
+    if (listEl) {
+      const li = document.createElement('li');
+      li.textContent = 'Unable to load tasks';
+      listEl.appendChild(li);
+    }
+    console.error('loadTasks:', err && err.message ? err.message : err);
   }
 }
 
