@@ -309,15 +309,10 @@ button:hover {
   background: var(--color-accent);
 }
 
-@media (min-width: 768px) {
-  .dashboard-grid {
-    grid-template-columns: 2fr 1fr;
-  }
-}
-
 .dashboard-grid {
   display: grid;
   gap: var(--space-lg);
+  grid-template-columns: 1fr;
 }
 
 .widgets {
@@ -326,9 +321,9 @@ button:hover {
   gap: var(--space-lg);
 }
 
-@media (max-width: 767px) {
+@media (min-width: 768px) {
   .dashboard-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 2fr 1fr;
   }
 }
 
