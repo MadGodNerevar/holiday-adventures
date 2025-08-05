@@ -21,15 +21,15 @@
   /* Spacing scale */
   --space-sm: 0.5rem;
   --space-md: 1rem;
-  --space-lg: 1.5rem;
-  --space-xl: 2rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
 
   /* Typography scale */
   --font-size-base: 1rem;
-  --font-size-md: 1.25rem;
+  --font-size-md: 1.125rem;
   --font-size-lg: 1.5rem;
   --font-size-xl: 2rem;
-  --font-size-xxl: 2.5rem;
+  --font-size-xxl: 2.75rem;
 
   /* Color tokens */
   --color-primary: var(--teal);
@@ -99,6 +99,7 @@ body {
 h1, h2, h3 {
   font-family: 'Poppins', sans-serif;
   margin-top: 0;
+  margin-bottom: var(--space-md);
 }
 
 h1 {
@@ -125,7 +126,7 @@ h3 {
 section {
   margin-bottom: var(--space-xl);
   border: 1px solid var(--section-border);
-  padding: var(--space-md);
+  padding: var(--space-lg);
   border-radius: 8px;
   box-shadow: 0 2px 4px var(--section-shadow);
   color: var(--section-text);
@@ -168,7 +169,7 @@ section:nth-of-type(even) {
 h1,
 h2 {
   color: var(--color-primary);
-  text-shadow: 1px 1px 2px #000;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
 h2::before {
@@ -280,16 +281,17 @@ h2::before {
 }
 
 button {
-  background: var(--teal);
-  color: #fff;
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
   border: none;
-  padding: var(--space-sm) var(--space-md);
+  padding: var(--space-sm) var(--space-lg);
   border-radius: 8px;
   cursor: pointer;
+  transition: background 0.3s ease;
 }
 
 button:hover {
-  background: var(--coral);
+  background: var(--color-accent);
 }
 
 @media (min-width: 768px) {
@@ -332,15 +334,13 @@ button:hover {
   margin-top: var(--space-md);
   display: flex;
   justify-content: center;
-  gap: var(--space-md);
+  gap: var(--space-lg);
 }
 
 .hero-cta button {
-  padding: var(--space-md) var(--space-lg);
-  border: none;
-  border-radius: 6px;
   background: var(--color-accent);
   color: var(--color-text-inverse);
+  padding: var(--space-md) var(--space-xl);
   font-weight: 700;
   will-change: transform, opacity;
 }
