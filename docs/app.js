@@ -25,35 +25,27 @@ const repo =
 
 function initTheme() {
   const root = document.documentElement;
-  const themeToggle = document.getElementById('theme-toggle');
+  const selector = document.getElementById('theme-selector');
   const storedTheme = localStorage.getItem('theme');
   const media = window.matchMedia('(prefers-color-scheme: dark)');
   const currentTheme = storedTheme || (media.matches ? 'dark' : 'light');
 
   root.setAttribute('data-theme', currentTheme);
-
-  const updateToggle = theme => {
-    if (themeToggle) {
-      themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
-    }
-  };
-
-  updateToggle(currentTheme);
+  if (selector) selector.value = currentTheme;
 
   media.addEventListener('change', e => {
     if (!localStorage.getItem('theme')) {
       const newTheme = e.matches ? 'dark' : 'light';
       root.setAttribute('data-theme', newTheme);
-      updateToggle(newTheme);
+      if (selector) selector.value = newTheme;
     }
   });
 
-  if (themeToggle) {
-    themeToggle.addEventListener('click', () => {
-      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      root.setAttribute('data-theme', next);
-      localStorage.setItem('theme', next);
-      updateToggle(next);
+  if (selector) {
+    selector.addEventListener('change', e => {
+      const theme = e.target.value;
+      root.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
     });
   }
 }
