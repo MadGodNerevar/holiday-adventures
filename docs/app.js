@@ -5,25 +5,25 @@ function getHolidayToken() {
   return localStorage.getItem('HOLIDAY_TOKEN') || '';
 }
 
-async function loadIssues(headers) {
+async function loadTasks(headers) {
   const listEl = document.getElementById('tasks-list');
   listEl.innerHTML = '';
   try {
     const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, { headers });
-    if (!res.ok) throw new Error('Failed to fetch issues');
-    const issues = await res.json();
-    issues.forEach(issue => {
+    if (!res.ok) throw new Error('Failed to fetch tasks');
+    const tasks = await res.json();
+    tasks.forEach(task => {
       const li = document.createElement('li');
       const a = document.createElement('a');
-      a.href = issue.html_url;
-      a.textContent = issue.title;
+      a.href = task.html_url;
+      a.textContent = task.title;
       a.target = '_blank';
       li.appendChild(a);
       listEl.appendChild(li);
     });
   } catch (err) {
     const li = document.createElement('li');
-    li.textContent = 'Unable to load issues';
+    li.textContent = 'Unable to load tasks';
     listEl.appendChild(li);
     console.error(err);
   }
@@ -139,7 +139,7 @@ async function loadHolidayBits(headers) {
 function loadData() {
   const token = getHolidayToken();
   const headers = token ? { Authorization: `token ${token}` } : {};
-  loadIssues(headers);
+  loadTasks(headers);
   loadProjectBoard(headers);
   loadHolidayBits(headers);
 }
@@ -174,7 +174,7 @@ document.getElementById('task-form').addEventListener('submit', async (e) => {
   const resultEl = document.getElementById('task-result');
   if (res.ok) {
     const data = await res.json();
-    resultEl.innerHTML = `Issue created: <a href="${data.html_url}" target="_blank">${data.number}</a>`;
+    resultEl.innerHTML = `Task created: <a href="${data.html_url}" target="_blank">${data.number}</a>`;
     document.getElementById('task-form').reset();
     loadData();
   } else {
