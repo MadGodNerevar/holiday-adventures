@@ -264,7 +264,12 @@ async function loadHolidayBits(headers) {
 
 function loadData() {
   const token = getHolidayToken();
-  const headers = token ? { Authorization: `token ${token}` } : {};
+  let headers = {};
+  if (token) {
+    // Fine-grained PATs start with `github_pat_`; otherwise assume classic PAT
+    const isFineGrained = token.startsWith('github_pat_');
+    headers = { Authorization: `${isFineGrained ? 'Bearer' : 'token'} ${token}` };
+  }
   loadTasks(headers);
   loadProjectBoard(headers);
   loadHolidayBits(headers);
