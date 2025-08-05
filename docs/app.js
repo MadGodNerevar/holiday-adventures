@@ -361,7 +361,7 @@ function populateProjectSelector(projects, headers) {
       div.style.display = !value || div.dataset.id === value ? '' : 'none';
     });
     loadTasks(headers, value || null);
-  });
+  };
 }
 
 function populateTaskProjectSelector(projects) {
