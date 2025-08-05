@@ -6,7 +6,7 @@ function getHolidayToken() {
 }
 
 async function loadIssues(headers) {
-  const listEl = document.getElementById('issues-list');
+  const listEl = document.getElementById('tasks-list');
   listEl.innerHTML = '';
   try {
     const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, { headers });
@@ -154,15 +154,15 @@ document.getElementById('save-token').addEventListener('click', () => {
   }
 });
 
-document.getElementById('issue-form').addEventListener('submit', async (e) => {
+document.getElementById('task-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const token = getHolidayToken();
   if (!token) {
     alert('Please save a token first.');
     return;
   }
-  const title = document.getElementById('issue-title').value;
-  const body = document.getElementById('issue-body').value;
+  const title = document.getElementById('task-title').value;
+  const body = document.getElementById('task-body').value;
   const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, {
     method: 'POST',
     headers: {
@@ -171,11 +171,11 @@ document.getElementById('issue-form').addEventListener('submit', async (e) => {
     },
     body: JSON.stringify({ title, body })
   });
-  const resultEl = document.getElementById('issue-result');
+  const resultEl = document.getElementById('task-result');
   if (res.ok) {
     const data = await res.json();
     resultEl.innerHTML = `Issue created: <a href="${data.html_url}" target="_blank">${data.number}</a>`;
-    document.getElementById('issue-form').reset();
+    document.getElementById('task-form').reset();
     loadData();
   } else {
     const err = await res.json();
