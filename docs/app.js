@@ -33,66 +33,104 @@ async function loadProjectBoard(headers) {
   const boardEl = document.getElementById('project-columns');
   boardEl.innerHTML = '';
   try {
-    const projectRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/projects`, {
-      headers: { ...headers, Accept: 'application/vnd.github.inertia-preview+json' }
+    const token = headers.Authorization ? headers.Authorization.split(' ')[1] : null;
+    const gqlHeaders = token
+      ? { Authorization: `bearer ${token}`, 'Content-Type': 'application/json' }
+      : { 'Content-Type': 'application/json' };
+
+    const query = `
+      query($owner: String!, $repo: String!) {
+        repository(owner: $owner, name: $repo) {
+          projectsV2(first: 10) {
+            nodes {
+              title
+              items(first: 50) {
+                nodes {
+                  content {
+                    ... on Issue { title url }
+                    ... on PullRequest { title url }
+                    ... on DraftIssue { title }
+                  }
+                  fieldValues(first: 10) {
+                    nodes {
+                      ... on ProjectV2ItemFieldSingleSelectValue {
+                        name
+                        field { name }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    const projectRes = await fetch('https://api.github.com/graphql', {
+      method: 'POST',
+      headers: gqlHeaders,
+      body: JSON.stringify({ query, variables: { owner, repo } })
     });
     if (!projectRes.ok) throw new Error('Failed to fetch projects');
-    const projects = await projectRes.json();
+    const projectData = await projectRes.json();
+    const projects = projectData?.data?.repository?.projectsV2?.nodes || [];
+    if (!projects.length) {
+      boardEl.textContent = 'No projects found';
+      return;
+    }
     for (const project of projects) {
       const projectDiv = document.createElement('div');
       projectDiv.className = 'project';
       const projectTitle = document.createElement('h3');
-      projectTitle.textContent = project.name;
+      projectTitle.textContent = project.title;
       projectDiv.appendChild(projectTitle);
 
-      const columnsRes = await fetch(project.columns_url, {
-        headers: { ...headers, Accept: 'application/vnd.github.inertia-preview+json' }
-      });
-      if (!columnsRes.ok) continue;
-      const columns = await columnsRes.json();
       const columnsContainer = document.createElement('div');
       columnsContainer.className = 'columns';
-      for (const column of columns) {
+      const columnMap = {};
+      project.items.nodes.forEach(item => {
+        let status = 'No Status';
+        item.fieldValues.nodes.forEach(fv => {
+          if (fv.field && fv.field.name === 'Status' && fv.name) {
+            status = fv.name;
+          }
+        });
+        columnMap[status] = columnMap[status] || [];
+        columnMap[status].push(item);
+      });
+
+      Object.entries(columnMap).forEach(([status, items]) => {
         const columnDiv = document.createElement('div');
         columnDiv.className = 'column';
         const columnTitle = document.createElement('h4');
-        columnTitle.textContent = column.name;
+        columnTitle.textContent = status;
         columnDiv.appendChild(columnTitle);
-
-        const cardsRes = await fetch(column.cards_url, {
-          headers: { ...headers, Accept: 'application/vnd.github.inertia-preview+json' }
-        });
-        if (cardsRes.ok) {
-          const cards = await cardsRes.json();
-          const ul = document.createElement('ul');
-          for (const card of cards) {
-            const li = document.createElement('li');
-            if (card.content_url) {
-              const contentRes = await fetch(card.content_url, { headers });
-              if (contentRes.ok) {
-                const content = await contentRes.json();
-                const link = document.createElement('a');
-                link.href = content.html_url;
-                link.textContent = content.title;
-                link.target = '_blank';
-                li.appendChild(link);
-              } else {
-                li.textContent = 'Item';
-              }
-            } else {
-              li.textContent = card.note || 'Card';
-            }
-            ul.appendChild(li);
+        const ul = document.createElement('ul');
+        items.forEach(item => {
+          const li = document.createElement('li');
+          if (item.content && item.content.url) {
+            const link = document.createElement('a');
+            link.href = item.content.url;
+            link.textContent = item.content.title;
+            link.target = '_blank';
+            li.appendChild(link);
+          } else if (item.content && item.content.title) {
+            li.textContent = item.content.title;
+          } else {
+            li.textContent = 'Item';
           }
-          columnDiv.appendChild(ul);
-        }
+          ul.appendChild(li);
+        });
+        columnDiv.appendChild(ul);
         columnsContainer.appendChild(columnDiv);
-      }
+      });
+
       projectDiv.appendChild(columnsContainer);
       boardEl.appendChild(projectDiv);
     }
   } catch (err) {
-    boardEl.textContent = 'Unable to load project board';
+    boardEl.textContent = 'Projects could not be loaded.';
     console.error(err);
   }
 }
