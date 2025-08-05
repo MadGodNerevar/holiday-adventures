@@ -221,6 +221,7 @@ async function loadProjectBoard(headers) {
     for (const project of projects) {
       const projectDiv = document.createElement('div');
       projectDiv.className = 'project';
+      projectDiv.dataset.title = project.title;
       const projectTitle = document.createElement('h3');
       projectTitle.textContent = project.title;
       projectDiv.appendChild(projectTitle);
@@ -268,10 +269,29 @@ async function loadProjectBoard(headers) {
       projectDiv.appendChild(columnsContainer);
       boardEl.appendChild(projectDiv);
     }
+    populateProjectSelector(projects);
   } catch (err) {
     boardEl.textContent = 'Projects could not be loaded.';
     console.error(err);
   }
+}
+
+function populateProjectSelector(projects) {
+  const select = document.getElementById('project-select');
+  if (!select) return;
+  select.innerHTML = '<option value="">All Projects</option>';
+  projects.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.title;
+    opt.textContent = p.title;
+    select.appendChild(opt);
+  });
+  select.addEventListener('change', e => {
+    const value = e.target.value;
+    document.querySelectorAll('#project-board .project').forEach(div => {
+      div.style.display = !value || div.dataset.title === value ? '' : 'none';
+    });
+  });
 }
 
 async function loadHolidayBits(headers) {
@@ -451,6 +471,7 @@ function initAnimations() {
   if (!prefersReducedMotion() && window.gsap) {
     gsap.from('.main-nav a', { y: -20, opacity: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out' });
     gsap.from('.hero-tagline', { y: 50, opacity: 0, duration: 1, ease: 'power2.out' });
+    gsap.from('.hero-cta button', { y: 20, opacity: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out' });
   }
   startHeroSlideshow();
 }
@@ -481,6 +502,27 @@ function initSectionObserver() {
       observer.observe(sec);
     }
   });
+}
+
+function initPlanner() {
+  const bar = document.getElementById('planner-progress');
+  const tasks = document.querySelectorAll('#planner-tasks input[type="checkbox"]');
+  if (!bar || !tasks.length) return;
+  const update = () => {
+    const completed = [...tasks].filter(t => t.checked).length;
+    const percent = (completed / tasks.length) * 100;
+    if (!prefersReducedMotion() && window.gsap) {
+      gsap.to(bar, { width: percent + '%', duration: 0.5, ease: 'power2.out' });
+    } else {
+      bar.style.width = percent + '%';
+    }
+  };
+  tasks.forEach(t => t.addEventListener('change', update));
+  update();
+}
+
+function initAOS() {
+  if (window.AOS) AOS.init();
 }
 
 const saveBtn = document.getElementById('save-token');
@@ -587,6 +629,8 @@ document.addEventListener('DOMContentLoaded', () => {
   updateActiveNav();
   initAnimations();
   initSectionObserver();
+  initPlanner();
+  initAOS();
 });
 window.addEventListener('scroll', () => {
   updateActiveNav();
