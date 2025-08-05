@@ -1,13 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Open+Sans:wght@400;600&display=swap');
 
 :root {
-  --color-primary: #00b4d8;
-  --color-accent: #ff6f61;
-  --color-accent-light: #ff9b8a;
-  --color-text: #222;
-  --color-text-inverse: #ffffff;
-  --color-surface: #ffffff;
-  --color-surface-alt: #f5f5f5;
+  --sunset: #ffb703;
+  --sand: #f4e1d2;
+  --bg-color: var(--sand);
+  --text-color: #222;
+  --card-bg: #ffffff;
 
   /* Section defaults */
   --section-border: rgba(0, 0, 0, 0.1);
@@ -21,15 +19,25 @@
   /* Spacing scale */
   --space-sm: 0.5rem;
   --space-md: 1rem;
-  --space-lg: 2rem;
-  --space-xl: 3rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
 
   /* Typography scale */
   --font-size-base: 1rem;
   --font-size-md: 1.125rem;
-  --font-size-lg: 1.5rem;
-  --font-size-xl: 2rem;
-  --font-size-xxl: 2.75rem;
+  --font-size-lg: 1.375rem;
+  --font-size-xl: 1.75rem;
+  --font-size-xxl: 2.5rem;
+
+  /* Color tokens */
+  --color-primary: #00b4d8;
+  --color-secondary: #ffffff;
+  --color-accent: #ff6f61;
+  --color-accent-light: #ff9b8a;
+  --color-text-inverse: #ffffff;
+  --color-surface: #ffffff;
+  --color-bg-start: var(--color-primary);
+  --color-bg-end: var(--color-accent);
 
   /* Input tokens */
   --input-border: #cccccc;
@@ -54,6 +62,16 @@
   --section-bg-even: var(--color-surface-alt);
   --section-image-shadow: rgba(0, 0, 0, 0.4);
   --hero-tagline-bg: rgba(0, 0, 0, 0.6);
+
+  /* Color tokens */
+  --color-primary: var(--sunset);
+  --color-secondary: var(--text-color);
+  --color-accent: #ff6f61;
+  --color-accent-light: #ff8c82;
+  --color-text-inverse: #0d1b2a;
+  --color-surface: #16222f;
+  --color-bg-start: #1b263b;
+  --color-bg-end: #0d1b2a;
 
   /* Input tokens */
   --input-border: #3c4a5a;
@@ -104,7 +122,7 @@ h3 {
   justify-content: space-between;
   align-items: center;
   background: var(--color-primary);
-  color: var(--color-text-inverse);
+  color: #fff;
   padding: var(--space-md) var(--space-xl);
 }
 
@@ -149,6 +167,12 @@ section:nth-of-type(even) {
   margin: var(--space-sm) auto var(--space-md);
   box-shadow: 0 1px 3px var(--section-image-shadow);
   border-radius: 8px;
+}
+
+h1,
+h2 {
+  color: var(--color-primary);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
 h2::before {
@@ -249,6 +273,10 @@ h2::before {
   font-weight: 600;
 }
 
+.main-nav a:hover {
+  color: var(--color-accent);
+}
+
 
 .hero-icons span {
   position: absolute;
@@ -285,18 +313,13 @@ button {
 }
 
 button:hover {
-  background: var(--color-accent);
-}
-
-@media (min-width: 768px) {
-  .dashboard-grid {
-    grid-template-columns: 2fr 1fr;
-  }
+  background: var(--color-accent-light);
 }
 
 .dashboard-grid {
   display: grid;
   gap: var(--space-lg);
+  grid-template-columns: 1fr;
 }
 
 .widgets {
@@ -305,17 +328,14 @@ button:hover {
   gap: var(--space-lg);
 }
 
-@media (max-width: 767px) {
+@media (min-width: 768px) {
   .dashboard-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 2fr 1fr;
   }
 }
 
-
-#project-board,
-form.card {
-  display: grid;
-  gap: var(--space-lg);
+[data-theme="dark"] .banner {
+  background: var(--color-accent);
 }
 
 @media (min-width: 768px) {
@@ -361,10 +381,6 @@ form.card button {
   padding: var(--space-md) var(--space-xl);
   font-weight: 700;
   will-change: transform, opacity;
-}
-
-.hero-cta button:hover {
-  background: var(--color-accent-light);
 }
 
 #project-selector {
