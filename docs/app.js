@@ -732,7 +732,6 @@ if (itineraryForm) {
 document.addEventListener('DOMContentLoaded', () => {
   const selector = document.getElementById('project-selector');
   if (selector) selector.style.display = 'none';
-  repo = 'holiday-adventures';
   loadProjectDetails('holiday-adventures');
   loadData();
   updateActiveNav();
