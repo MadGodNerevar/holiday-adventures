@@ -8,47 +8,53 @@
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="banner">
-    <h1>✈️ Adventure Holiday's Tracker ✈️</h1>
-  </header>
-  <nav class="main-nav">
-    <a href="#tasks">Tasks</a>
-    <a href="#project-board">Project Board</a>
-    <a href="#holiday-bits">Holiday Bits</a>
-  </nav>
-  <section id="token">
-    <h2>Authentication</h2>
-    <p>Enter a GitHub personal access token with <code>repo</code> scope. The token is stored only in this browser as <code>HOLIDAY_TOKEN</code> in <code>localStorage</code>.</p>
-    <label for="token-input">Personal Access Token</label>
-    <input type="password" id="token-input" placeholder="HOLIDAY_TOKEN" />
-    <button id="save-token">Save Token</button>
+  <section class="hero">
+    <img class="hero-image" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/5+hHgAHggJ/PdLKoQAAAABJRU5ErkJggg==" alt="Scenic adventure" />
+    <div class="hero-tagline">Your next adventure starts here</div>
   </section>
-  <section id="tasks">
-    <h2>Existing Tasks</h2>
-    <ul id="tasks-list"></ul>
-  </section>
-
-    <section id="project-board">
-      <h2>Project Board</h2>
-      <div id="project-columns"></div>
+  <div class="container">
+    <header class="banner">
+      <h1>✈️ Adventure Holiday's Tracker ✈️</h1>
+    </header>
+    <nav class="main-nav">
+      <a href="#tasks">Tasks</a>
+      <a href="#project-board">Project Board</a>
+      <a href="#holiday-bits">Holiday Bits</a>
+    </nav>
+    <section id="token">
+      <h2>Authentication</h2>
+      <p>Enter a GitHub personal access token with <code>repo</code> scope. The token is stored only in this browser as <code>HOLIDAY_TOKEN</code> in <code>localStorage</code>.</p>
+      <label for="token-input">Personal Access Token</label>
+      <input type="password" id="token-input" placeholder="HOLIDAY_TOKEN" />
+      <button id="save-token">Save Token</button>
+    </section>
+    <section id="tasks">
+      <h2>Existing Tasks</h2>
+      <ul id="tasks-list"></ul>
     </section>
 
-  <section id="holiday-bits">
-    <h2>Travel Bits</h2>
-    <div id="holiday-bits-container"></div>
-  </section>
-  
-  <section id="new-task">
-    <h2>Submit a New Task</h2>
-    <form id="task-form">
-      <label for="task-title">Title</label>
-      <input type="text" id="task-title" required />
-      <label for="task-body">Description</label>
-      <textarea id="task-body" required></textarea>
-      <button type="submit">Create Task</button>
-    </form>
-    <div id="task-result"></div>
-  </section>
+      <section id="project-board">
+        <h2>Project Board</h2>
+        <div id="project-columns"></div>
+      </section>
+
+    <section id="holiday-bits">
+      <h2>Travel Bits</h2>
+      <div id="holiday-bits-container"></div>
+    </section>
+
+    <section id="new-task">
+      <h2>Submit a New Task</h2>
+      <form id="task-form">
+        <label for="task-title">Title</label>
+        <input type="text" id="task-title" required />
+        <label for="task-body">Description</label>
+        <textarea id="task-body" required></textarea>
+        <button type="submit">Create Task</button>
+      </form>
+      <div id="task-result"></div>
+    </section>
+  </div>
 
   <script src="app.js"></script>
 </body>
