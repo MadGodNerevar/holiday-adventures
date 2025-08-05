@@ -336,11 +336,16 @@ async function loadHolidayBits(headers) {
       files.forEach(file => {
         if (file.type === 'file') {
           const li = document.createElement('li');
-          const a = document.createElement('a');
-          a.href = file.html_url;
-          a.textContent = file.name;
-          a.target = '_blank';
-          li.appendChild(a);
+          const name = file.name.replace(/\.md$/, '').replace(/-/g, ' ');
+          if (file.name.endsWith('.md')) {
+            li.textContent = name;
+          } else {
+            const a = document.createElement('a');
+            a.href = file.html_url;
+            a.textContent = name;
+            a.target = '_blank';
+            li.appendChild(a);
+          }
           ul.appendChild(li);
         }
       });
