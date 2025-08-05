@@ -155,12 +155,15 @@ h2::before {
   text-decoration: underline;  /* from Codex */
 }
 
-.main-nav a:focus,
-.main-nav a.active {
+.main-nav a:focus {
   outline: 3px solid #023047;  /* from main */
   outline-offset: 2px;         /* from main */
+}
+
+.main-nav a.active {
   background: #ffd166;         /* from main */
   color: #023047;              /* from main */
+  text-decoration: underline;
 }
 
 @media (max-width: 600px) {
