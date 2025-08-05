@@ -5,18 +5,18 @@ function getHolidayToken() {
   return localStorage.getItem('HOLIDAY_TOKEN') || '';
 }
 
-async function loadIssues(headers) {
-  const listEl = document.getElementById('issues-list');
+async function loadTasks(headers) {
+  const listEl = document.getElementById('tasks-list');
   listEl.innerHTML = '';
   try {
     const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, { headers });
     if (!res.ok) throw new Error('Failed to fetch tasks');
-    const issues = await res.json();
-    issues.forEach(issue => {
+    const tasks = await res.json();
+    tasks.forEach(task => {
       const li = document.createElement('li');
       const a = document.createElement('a');
-      a.href = issue.html_url;
-      a.textContent = issue.title;
+      a.href = task.html_url;
+      a.textContent = task.title;
       a.target = '_blank';
       li.appendChild(a);
       listEl.appendChild(li);
@@ -139,7 +139,7 @@ async function loadHolidayBits(headers) {
 function loadData() {
   const token = getHolidayToken();
   const headers = token ? { Authorization: `token ${token}` } : {};
-  loadIssues(headers);
+  loadTasks(headers);
   loadProjectBoard(headers);
   loadHolidayBits(headers);
 }
@@ -154,15 +154,15 @@ document.getElementById('save-token').addEventListener('click', () => {
   }
 });
 
-document.getElementById('issue-form').addEventListener('submit', async (e) => {
+document.getElementById('task-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const token = getHolidayToken();
   if (!token) {
     alert('Please save a token first.');
     return;
   }
-  const title = document.getElementById('issue-title').value;
-  const body = document.getElementById('issue-body').value;
+  const title = document.getElementById('task-title').value;
+  const body = document.getElementById('task-body').value;
   const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, {
     method: 'POST',
     headers: {
@@ -171,11 +171,11 @@ document.getElementById('issue-form').addEventListener('submit', async (e) => {
     },
     body: JSON.stringify({ title, body })
   });
-  const resultEl = document.getElementById('issue-result');
+  const resultEl = document.getElementById('task-result');
   if (res.ok) {
     const data = await res.json();
     resultEl.innerHTML = `Task created: <a href="${data.html_url}" target="_blank">${data.number}</a>`;
-    document.getElementById('issue-form').reset();
+    document.getElementById('task-form').reset();
     loadData();
   } else {
     const err = await res.json();

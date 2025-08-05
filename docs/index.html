@@ -3,23 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Holiday Adventures Task Tracker</title>
-  <link rel="stylesheet" href="styles.css" />
+<title>Holiday Adventures Task Tracker</title>
+<link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <h1>Holiday Adventures Task Tracker</h1>
-  <p>Tasks are tracked as GitHub Issues, so templates live in <code>.github/ISSUE_TEMPLATE/</code>.</p>
-
+  <header class="banner">
+    <h1>🎄 Holiday Adventures Task Tracker 🎄</h1>
+  </header>
   <section id="token">
     <h2>Authentication</h2>
     <p>Enter a GitHub personal access token with <code>repo</code> scope. The token is stored only in this browser as <code>HOLIDAY_TOKEN</code> in <code>localStorage</code>.</p>
     <input type="password" id="token-input" placeholder="HOLIDAY_TOKEN" />
     <button id="save-token">Save Token</button>
   </section>
-
-  <section id="issues">
+  <section id="tasks">
     <h2>Existing Tasks</h2>
-    <ul id="issues-list"></ul>
+    <ul id="tasks-list"></ul>
   </section>
 
   <section id="project-board">
@@ -31,21 +30,21 @@
     <h2>Holiday Bits</h2>
     <div id="holiday-bits-container"></div>
   </section>
-
-  <section id="new-issue">
+  
+  <section id="new-task">
     <h2>Submit a New Task</h2>
-    <form id="issue-form">
+    <form id="task-form">
       <label>
         Title
-        <input type="text" id="issue-title" required />
+        <input type="text" id="task-title" required />
       </label>
       <label>
         Description
-        <textarea id="issue-body" required></textarea>
+        <textarea id="task-body" required></textarea>
       </label>
       <button type="submit">Create Task</button>
     </form>
-    <div id="issue-result"></div>
+    <div id="task-result"></div>
   </section>
 
   <script src="app.js"></script>
