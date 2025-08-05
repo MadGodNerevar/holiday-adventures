@@ -19,19 +19,32 @@
   --hero-tagline-bg: rgba(0, 0, 0, 0.5);
 
   /* Spacing scale */
-  --space-xs: 0.25rem;
   --space-sm: 0.5rem;
   --space-md: 1rem;
   --space-lg: 1.5rem;
   --space-xl: 2rem;
 
   /* Typography scale */
-  --font-size-sm: 0.875rem;
   --font-size-base: 1rem;
   --font-size-md: 1.25rem;
   --font-size-lg: 1.5rem;
   --font-size-xl: 2rem;
   --font-size-xxl: 2.5rem;
+
+  /* Color tokens */
+  --color-primary: var(--teal);
+  --color-secondary: #ffffff;
+  --color-accent: var(--coral);
+  --color-accent-light: #ff9b8a;
+  --color-text-inverse: #ffffff;
+  --color-surface: #ffffff;
+  --color-bg-start: var(--teal);
+  --color-bg-end: var(--coral);
+
+  /* Input tokens */
+  --input-border: #cccccc;
+  --input-bg: #ffffff;
+  --input-text: var(--text-color);
 }
 
 [data-theme="dark"] {
@@ -47,6 +60,21 @@
   --section-bg-even: #16222f;
   --section-image-shadow: rgba(0, 0, 0, 0.6);
   --hero-tagline-bg: rgba(0, 0, 0, 0.6);
+
+  /* Color tokens */
+  --color-primary: var(--sunset);
+  --color-secondary: var(--text-color);
+  --color-accent: var(--coral);
+  --color-accent-light: #ff8c82;
+  --color-text-inverse: #0d1b2a;
+  --color-surface: #16222f;
+  --color-bg-start: #1b263b;
+  --color-bg-end: #0d1b2a;
+
+  /* Input tokens */
+  --input-border: #3c4a5a;
+  --input-bg: #1b263b;
+  --input-text: var(--text-color);
 }
 
 * {
@@ -130,17 +158,15 @@ section:nth-of-type(even) {
 
 .section-image {
   width: 100%;
-  max-width: 400px;
   height: auto;
   display: block;
   margin: var(--space-sm) auto var(--space-md);
-  box-shadow: 0 2px 4px var(--section-image-shadow);
+  box-shadow: 0 2px 6px var(--section-image-shadow);
   border-radius: 8px;
 }
 
 h1,
 h2 {
-  font-family: 'Poppins', sans-serif;
   color: var(--color-primary);
   text-shadow: 1px 1px 2px #000;
 }
@@ -251,13 +277,6 @@ h2::before {
   border-radius: 8px;
   box-shadow: 0 2px 6px var(--section-shadow);
   padding: var(--space-lg);
-}
-
-.section-image {
-  width: 100%;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  margin-bottom: var(--space-md);
 }
 
 button {
