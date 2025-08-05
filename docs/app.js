@@ -10,7 +10,7 @@ const envConfig = (typeof window !== 'undefined' && (window.ENV || window.env)) 
 const username = 'MadGodNerevar';
 const owner = username;
 
-const repo = 'holiday-adventures';
+let repo = 'holiday-adventures';
 
 // Access key for Unsplash API (required for destination images)
 const unsplashAccessKey =
