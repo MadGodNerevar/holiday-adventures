@@ -201,7 +201,7 @@ h2::before {
   content: '📸';
 }
 
- .hero {
+.hero {
   position: relative;
   display: flex;
   align-items: center;
@@ -213,13 +213,28 @@ h2::before {
   overflow: hidden;
 }
 
-.hero-image {
+.hero-slideshow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.hero-slideshow img {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.hero-slideshow img:first-child {
+  opacity: 1;
 }
 
 .hero-tagline {

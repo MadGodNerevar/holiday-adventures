@@ -580,6 +580,19 @@ function handleHeroScroll() {
   gsap.to(tagline, { y: offset * 0.2, opacity: 1 - offset / 200, overwrite: 'auto', duration: 0.3 });
 }
 
+function initHeroSlideshow() {
+  if (prefersReducedMotion()) return;
+  const slides = document.querySelectorAll('.hero-slideshow img');
+  if (!slides.length) return;
+  let current = 0;
+  setInterval(() => {
+    const next = (current + 1) % slides.length;
+    slides[current].style.opacity = 0;
+    slides[next].style.opacity = 1;
+    current = next;
+  }, 5000);
+}
+
 function initSectionObserver() {
   if (!('IntersectionObserver' in window)) return;
   const sections = document.querySelectorAll('section');
@@ -737,6 +750,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadData();
   updateActiveNav();
   initAnimations();
+  initHeroSlideshow();
   initSectionObserver();
   initPlanner();
   initAOS();
