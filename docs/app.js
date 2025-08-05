@@ -1,5 +1,22 @@
-const owner = window.location.hostname.split('.')[0];
-const repo = window.location.pathname.split('/')[1] || 'holiday-adventures';
+// Configuration for repository information
+// Allow overrides via query parameters (e.g., ?owner=user&repo=project),
+// a global config object `window.HOLIDAY_CONFIG`, or environment variables
+// exposed on `window.ENV`. Falls back to parsing the current URL.
+const queryParams = new URLSearchParams(window.location.search);
+const globalConfig = window.HOLIDAY_CONFIG || {};
+const envConfig = (typeof window !== 'undefined' && (window.ENV || window.env)) || {};
+
+const owner =
+  queryParams.get('owner') ||
+  globalConfig.owner ||
+  envConfig.GITHUB_OWNER ||
+  window.location.hostname.split('.')[0];
+const repo =
+  queryParams.get('repo') ||
+  globalConfig.repo ||
+  envConfig.GITHUB_REPO ||
+  window.location.pathname.split('/')[1] ||
+  'holiday-adventures';
 
 function getHolidayToken() {
   return localStorage.getItem('HOLIDAY_TOKEN') || '';
