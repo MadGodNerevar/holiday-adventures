@@ -2,6 +2,7 @@
 // Allow overrides via query parameters (e.g., ?owner=user&repo=project),
 // a global config object `window.HOLIDAY_CONFIG`, or environment variables
 // exposed on `window.ENV`. Falls back to parsing the current URL.
+import { GITHUB_TOKEN } from './config.js';
 const queryParams = new URLSearchParams(window.location.search);
 const globalConfig = window.HOLIDAY_CONFIG || {};
 const envConfig = (typeof window !== 'undefined' && (window.ENV || window.env)) || {};
@@ -58,7 +59,7 @@ function initTheme() {
 document.addEventListener('DOMContentLoaded', initTheme);
 
 function getHolidayToken() {
-  return localStorage.getItem('HOLIDAY_TOKEN') || '';
+  return GITHUB_TOKEN || localStorage.getItem('HOLIDAY_TOKEN') || '';
 }
 
 async function loadTasks(headers) {
