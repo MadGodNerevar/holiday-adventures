@@ -21,7 +21,6 @@ const repo =
   window.location.pathname.split('/')[1] ||
   'holiday-adventures';
 
-
 function getHolidayToken() {
   return localStorage.getItem('HOLIDAY_TOKEN') || '';
 }
@@ -177,16 +176,19 @@ async function loadHolidayBits(headers) {
   for (const { path, title } of sections) {
     try {
       const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, { headers });
+
       if (res.status === 404) {
-        const msg = document.createElement('p');
-        msg.textContent = `No data available for ${title}`;
-        container.appendChild(msg);
+        const note = document.createElement('div');
+        note.textContent = `No ${title} available`;
+        container.appendChild(note);
         continue;
       }
+
       if (!res.ok) {
         console.warn(`Failed to load ${path}: ${res.status}`);
         continue;
       }
+
       const files = await res.json();
       const sectionDiv = document.createElement('div');
       const h3 = document.createElement('h3');
@@ -207,7 +209,7 @@ async function loadHolidayBits(headers) {
       sectionDiv.appendChild(ul);
       container.appendChild(sectionDiv);
     } catch (err) {
-      console.warn(`Failed to load ${path}: ${err.message}`);
+      console.warn(`Unable to load ${title}`, err);
     }
   }
 }
