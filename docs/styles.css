@@ -10,10 +10,10 @@
   /* Section defaults */
   --section-border: rgba(0, 0, 0, 0.1);
   --section-shadow: rgba(0, 0, 0, 0.05);
-  --section-text: var(--text-color);
-  --section-bg-odd: #ffffff;
-  --section-bg-even: #fafafa;
-  --section-image-shadow: rgba(0, 0, 0, 0.1);
+  --section-text: var(--color-text);
+  --section-bg-odd: var(--color-surface);
+  --section-bg-even: var(--color-surface-alt);
+  --section-image-shadow: rgba(0, 0, 0, 0.05);
   --hero-tagline-bg: rgba(0, 0, 0, 0.5);
 
   /* Spacing scale */
@@ -41,22 +41,26 @@
 
   /* Input tokens */
   --input-border: #cccccc;
-  --input-bg: #ffffff;
-  --input-text: var(--text-color);
+  --input-bg: var(--color-surface);
+  --input-text: var(--color-text);
 }
 
 [data-theme="dark"] {
-  --bg-color: #0d1b2a;
-  --text-color: #f4e1d2;
-  --card-bg: #1b263b;
+  --color-primary: #ffb703;
+  --color-accent: #ff6f61;
+  --color-accent-light: #ff8c82;
+  --color-text: #f4e1d2;
+  --color-text-inverse: #0d1b2a;
+  --color-surface: #1b263b;
+  --color-surface-alt: #16222f;
 
   /* Section defaults */
   --section-border: rgba(255, 255, 255, 0.1);
-  --section-shadow: rgba(0, 0, 0, 0.6);
-  --section-text: var(--text-color);
-  --section-bg-odd: #1b263b;
-  --section-bg-even: #16222f;
-  --section-image-shadow: rgba(0, 0, 0, 0.6);
+  --section-shadow: rgba(0, 0, 0, 0.4);
+  --section-text: var(--color-text);
+  --section-bg-odd: var(--color-surface);
+  --section-bg-even: var(--color-surface-alt);
+  --section-image-shadow: rgba(0, 0, 0, 0.4);
   --hero-tagline-bg: rgba(0, 0, 0, 0.6);
 
   /* Color tokens */
@@ -71,8 +75,8 @@
 
   /* Input tokens */
   --input-border: #3c4a5a;
-  --input-bg: #1b263b;
-  --input-text: var(--text-color);
+  --input-bg: var(--color-surface);
+  --input-text: var(--color-text);
 }
 
 * {
@@ -82,8 +86,8 @@
 body {
   margin: 0;
   font-family: 'Open Sans', sans-serif;
-  background: var(--bg-color);
-  color: var(--text-color);
+  background: var(--color-surface-alt);
+  color: var(--color-text);
   line-height: 1.6;
   font-size: var(--font-size-base);
 }
@@ -98,6 +102,7 @@ h1, h2, h3 {
   font-family: 'Poppins', sans-serif;
   margin-top: 0;
   margin-bottom: var(--space-md);
+  color: var(--color-primary);
 }
 
 h1 {
@@ -126,7 +131,7 @@ section {
   border: 1px solid var(--section-border);
   padding: var(--space-lg);
   border-radius: 8px;
-  box-shadow: 0 2px 4px var(--section-shadow);
+  box-shadow: 0 1px 3px var(--section-shadow);
   color: var(--section-text);
 }
 
@@ -160,7 +165,7 @@ section:nth-of-type(even) {
   height: auto;
   display: block;
   margin: var(--space-sm) auto var(--space-md);
-  box-shadow: 0 2px 6px var(--section-image-shadow);
+  box-shadow: 0 1px 3px var(--section-image-shadow);
   border-radius: 8px;
 }
 
@@ -258,12 +263,12 @@ h2::before {
   display: flex;
   justify-content: center;
   gap: var(--space-md);
-  background: var(--sand);
+  background: var(--color-surface);
   padding: var(--space-sm);
 }
 
 .main-nav a {
-  color: var(--text-color);
+  color: var(--color-text);
   text-decoration: none;
   font-weight: 600;
 }
@@ -291,9 +296,9 @@ h2::before {
 }
 
 .card {
-  background: var(--card-bg);
+  background: var(--color-surface);
   border-radius: 8px;
-  box-shadow: 0 2px 6px var(--section-shadow);
+  box-shadow: 0 1px 3px var(--section-shadow);
   padding: var(--space-lg);
 }
 
@@ -333,12 +338,33 @@ button:hover {
   background: var(--color-accent);
 }
 
-[data-theme="dark"] .main-nav {
-  background: #1b263b;
+@media (min-width: 768px) {
+  #project-board,
+  form.card {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+form.card label {
+  margin-bottom: var(--space-sm);
+}
+
+form.card input,
+form.card select,
+form.card textarea {
+  width: 100%;
+  padding: var(--space-sm);
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+}
+
+form.card button {
+  grid-column: 1 / -1;
+  justify-self: start;
 }
 
 [data-theme="dark"] .card {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
 }
 
 /* Additional layout and animation sections */
@@ -421,7 +447,7 @@ button:hover {
   padding: var(--space-sm);
   border-radius: 8px;
   text-align: center;
-  box-shadow: 0 2px 4px var(--section-shadow);
+  box-shadow: 0 1px 2px var(--section-shadow);
 }
 
 .destination img {
@@ -432,17 +458,18 @@ button:hover {
   margin-bottom: var(--space-sm);
 }
 
+
 .site-footer {
-  background: linear-gradient(90deg, var(--color-bg-start), var(--color-bg-end));
+  background: var(--color-primary);
   padding: var(--space-lg);
   margin-top: var(--space-xl);
   text-align: center;
-  color: var(--color-secondary);
+  color: var(--color-text-inverse);
 }
 
 .site-footer .social-icons a {
   margin: 0 var(--space-sm);
-  color: var(--color-secondary);
+  color: var(--color-text-inverse);
   font-size: var(--font-size-lg);
   text-decoration: none;
 }
