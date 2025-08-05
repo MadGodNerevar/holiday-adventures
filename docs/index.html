@@ -6,6 +6,8 @@
   <meta name="repo" content="holiday-adventures" />
   <meta name="owner" content="{{GITHUB_OWNER}}" />
   <title>Adventure Holiday's Tracker</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -33,7 +35,68 @@
       <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&h=600&q=80" alt="Ocean waves" />
       <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1600&h=600&q=80" alt="Forest trail" />
     </div>
-    <div class="hero-tagline">Your next adventure starts here</div>
+    <div class="hero-tagline" data-aos="zoom-in">
+      Your next adventure starts here
+      <div class="hero-cta">
+        <button class="btn-plan">Plan Now</button>
+        <button class="btn-explore">Explore Destinations</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="project-selector" data-aos="fade-up">
+    <h2>Project Selector</h2>
+    <select id="project-select" aria-label="Select project">
+      <option value="">Loading projects...</option>
+    </select>
+  </section>
+
+  <section id="planner" data-aos="fade-up">
+    <h2>Interactive Planner</h2>
+    <div class="progress-wrapper">
+      <div id="planner-progress"></div>
+    </div>
+    <ul id="planner-tasks">
+      <li><label><input type="checkbox" /> Book flights</label></li>
+      <li><label><input type="checkbox" /> Reserve hotels</label></li>
+      <li><label><input type="checkbox" /> Pack bags</label></li>
+    </ul>
+  </section>
+
+  <section id="timeline" data-aos="fade-up">
+    <h2>Itinerary &amp; Memories</h2>
+    <div class="timeline">
+      <div class="timeline-item" data-aos="fade-up">
+        <span class="timeline-date">Day 1</span>
+        <p>Arrive at destination and explore the city.</p>
+      </div>
+      <div class="timeline-item" data-aos="fade-up">
+        <span class="timeline-date">Day 2</span>
+        <p>Adventure tour with friends.</p>
+      </div>
+      <div class="timeline-item" data-aos="fade-up">
+        <span class="timeline-date">Day 3</span>
+        <p>Relax and capture memories.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="destinations" data-aos="fade-up">
+    <h2>Destination Highlights</h2>
+    <div class="destinations-grid">
+      <div class="destination" data-aos="zoom-in">
+        <img src="https://source.unsplash.com/300x200/?paris" alt="Paris" />
+        <h3>Paris</h3>
+      </div>
+      <div class="destination" data-aos="zoom-in">
+        <img src="https://source.unsplash.com/300x200/?tokyo" alt="Tokyo" />
+        <h3>Tokyo</h3>
+      </div>
+      <div class="destination" data-aos="zoom-in">
+        <img src="https://source.unsplash.com/300x200/?newyork" alt="New York" />
+        <h3>New York</h3>
+      </div>
+    </div>
   </section>
 
   <div class="container">
@@ -78,7 +141,19 @@
     </section>
   </div>
 
+  <footer class="site-footer">
+    <div class="footer-content">
+      <p>Adventure Holiday's Tracker</p>
+      <div class="social-icons">
+        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        <a href="#" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div>
+    </div>
+  </footer>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" integrity="sha512-5keOAkznBWCG2lLBVmOAXoJ2i8LojRxurx8WcN6i/K3PaY5E9O+V1YxAECEV4VpWw2X2gYdEx+kt1/3uzMdKug==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
