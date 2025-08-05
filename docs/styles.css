@@ -1,26 +1,56 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
 
-body {
-  font-family: 'Poppins', sans-serif;
-  margin: 2rem;
-  background: linear-gradient(120deg, #c4f1f9, #ffe8d6);
-  background-image: radial-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 1px);
-  background-size: 20px 20px;
-  color: #222;
-}
-
 :root {
+  --color-bg-start: #c4f1f9;
+  --color-bg-end: #ffe8d6;
+  --color-text: #222;
+  --color-nav-bg: rgba(255, 255, 255, 0.6);
+  --color-surface: rgba(255, 255, 255, 0.9);
+  --color-column-bg: rgba(255, 255, 255, 0.8);
+  --color-primary: #ffb703;
+  --color-secondary: #023047;
+  --color-accent: #fb8500;
+  --color-accent-light: #ffd166;
+  --color-link: #0077b6;
+  --color-border: #f0c419;
+  --color-button-bg: #006400;
+  --color-button-hover: #008000;
+  --color-button-border-focus: #ffeb3b;
+  --color-text-inverse: #fff;
   --section-bg-odd: rgba(255, 255, 255, 0.85);
   --section-bg-even: rgba(245, 245, 245, 0.85);
   --section-text: #000;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --section-bg-odd: rgba(0, 0, 0, 0.3);
-    --section-bg-even: rgba(0, 0, 0, 0.5);
-    --section-text: #fff;
-  }
+[data-theme="dark"] {
+  --color-bg-start: #1b263b;
+  --color-bg-end: #0d1b2a;
+  --color-text: #f1f1f1;
+  --color-nav-bg: rgba(0, 0, 0, 0.6);
+  --color-surface: rgba(0, 0, 0, 0.3);
+  --color-column-bg: rgba(0, 0, 0, 0.6);
+  --color-primary: #ffb703;
+  --color-secondary: #023047;
+  --color-accent: #fb8500;
+  --color-accent-light: #ffd166;
+  --color-link: #8ecae6;
+  --color-border: #f0c419;
+  --color-button-bg: #004b23;
+  --color-button-hover: #006400;
+  --color-button-border-focus: #ffeb3b;
+  --color-text-inverse: #fff;
+  --section-bg-odd: rgba(0, 0, 0, 0.3);
+  --section-bg-even: rgba(0, 0, 0, 0.5);
+  --section-text: #fff;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 2rem;
+  background: linear-gradient(120deg, var(--color-bg-start), var(--color-bg-end));
+  background-image: radial-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 1px);
+  background-size: 20px 20px;
+  color: var(--color-text);
 }
 
 .container {
@@ -59,7 +89,7 @@ section:nth-of-type(even) {
 h1,
 h2 {
   font-family: 'Poppins', sans-serif;
-  color: #ffb703;
+  color: var(--color-primary);
   text-shadow: 1px 1px 2px #000;
 }
 
@@ -114,7 +144,7 @@ h2::before {
   justify-content: center;
   gap: 1rem;
   margin-bottom: 2rem;
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--color-nav-bg);
   padding: 1rem;
   border-radius: 12px;
 }
@@ -125,8 +155,8 @@ h2::before {
   gap: 0.25rem;         /* from Codex for icons */
   padding: 0.75rem 1.25rem;
   border-radius: 8px;
-  background: #ffb703;
-  color: #023047;
+  background: var(--color-primary);
+  color: var(--color-secondary);
   text-decoration: none;
   font-weight: 700;      /* from main */
   min-width: 44px;       /* from main */
@@ -136,18 +166,18 @@ h2::before {
 }
 
 .main-nav a:hover {
-  background: #fb8500;   /* from main */
-  color: #fff;
+  background: var(--color-accent);   /* from main */
+  color: var(--color-text-inverse);
   transform: translateY(-2px); /* from main */
   text-decoration: underline;  /* from Codex */
 }
 
 .main-nav a:focus,
 .main-nav a.active {
-  outline: 3px solid #023047;  /* from main */
+  outline: 3px solid var(--color-secondary);  /* from main */
   outline-offset: 2px;         /* from main */
-  background: #ffd166;         /* from main */
-  color: #023047;              /* from main */
+  background: var(--color-accent-light);         /* from main */
+  color: var(--color-secondary);              /* from main */
 }
 
 @media (max-width: 600px) {
@@ -167,7 +197,7 @@ h2::before {
 }
 
 #holiday-bits a {
-  color: #0077b6;
+  color: var(--color-link);
 }
 
 .columns {
@@ -177,8 +207,8 @@ h2::before {
 }
 
 .column {
-  border: 1px solid #ffb703;
-  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--color-primary);
+  background: var(--color-column-bg);
   padding: 0.5rem;
 }
 
@@ -199,7 +229,7 @@ button {
   width: 100%;
   padding: 0.75rem;
   margin-top: 0.5rem;
-  border: 2px solid #f0c419;
+  border: 2px solid var(--color-border);
   border-radius: 4px;
   box-sizing: border-box;
   font-size: 1rem;
@@ -209,32 +239,32 @@ button {
 
 input,
 textarea {
-  background: rgba(255, 255, 255, 0.9);
-  color: #000;
+  background: var(--color-surface);
+  color: var(--color-text);
 }
 
 input:hover,
 textarea:hover {
-  border-color: #fff;
+  border-color: var(--color-text-inverse);
 }
 
 input:focus,
 textarea:focus {
-  border-color: #0077b6;
-  outline: 3px solid #0077b6;
+  border-color: var(--color-link);
+  outline: 3px solid var(--color-link);
   outline-offset: 2px;
 }
 
 button {
-  background: #006400;
-  color: #fff;
+  background: var(--color-button-bg);
+  color: var(--color-text-inverse);
   cursor: pointer;
 }
 
 button:hover,
 button:focus {
-  background: #008000;
-  border-color: #ffeb3b;
-  outline: 3px solid #ffeb3b;
+  background: var(--color-button-hover);
+  border-color: var(--color-button-border-focus);
+  outline: 3px solid var(--color-button-border-focus);
   outline-offset: 2px;
 }
