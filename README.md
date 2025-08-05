@@ -58,6 +58,8 @@ https://YOUR-USERNAME.github.io/holiday-adventures/
 
 To submit an issue, provide a personal access token with `repo` scope in the page's authentication section. The token is saved only in your browser storage.
 
+This static site is published from the `docs/` directory via a GitHub Actions workflow that deploys the build to the `gh-pages` branch.
+
 ---
 
 ## ❤️ This Project
