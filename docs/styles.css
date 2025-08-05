@@ -62,3 +62,39 @@ h2::before {
   padding: 0.5rem;
   width: 200px;
 }
+
+input,
+textarea,
+button {
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  border: 2px solid #f0c419;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 1rem;
+  min-height: 44px;
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+input,
+textarea {
+  background: rgba(255, 255, 255, 0.9);
+  color: #000;
+}
+
+input:hover,
+textarea:hover {
+  border-color: #fff;
+}
+
+button {
+  background: #006400;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #b30000;
+  border-color: #fff;
+}
