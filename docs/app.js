@@ -1,15 +1,9 @@
 // Configuration for repository information
-// Allow overrides via query parameters (e.g., ?owner=user&repo=project),
-// a global config object `window.HOLIDAY_CONFIG`, or environment variables
-// exposed on `window.ENV`. Falls back to parsing the current URL.
 import { GITHUB_TOKEN } from './config.js';
 const queryParams = new URLSearchParams(window.location.search);
 const globalConfig = window.HOLIDAY_CONFIG || {};
 const envConfig = (typeof window !== 'undefined' && (window.ENV || window.env)) || {};
-
-const username = 'MadGodNerevar';
-const owner = username;
-
+const owner = 'MadGodNerevar';
 const repo = 'holiday-adventures';
 
 // Access key for Unsplash API (required for destination images)
@@ -55,18 +49,6 @@ function initTheme() {
 
 function getHolidayToken() {
   return GITHUB_TOKEN || localStorage.getItem('HOLIDAY_TOKEN') || '';
-}
-
-function loadUserProjects() {
-  const selector = document.getElementById('project-selector');
-  if (!selector) return;
-  selector.innerHTML = '';
-  const option = document.createElement('option');
-  option.value = 'holiday-adventures';
-  option.textContent = 'holiday adventures';
-  selector.appendChild(option);
-  selector.value = 'holiday-adventures';
-  selector.style.display = 'none';
 }
 
 async function loadProjectDetails(project) {
@@ -132,22 +114,20 @@ async function loadTasks(headers, projectId) {
     }
     listEl.innerHTML = '';
 
-    if (projectId) {
-      const token = headers.Authorization ? headers.Authorization.split(' ')[1] : null;
-      const gqlHeaders = token
-        ? { Authorization: `bearer ${token}`, 'Content-Type': 'application/json' }
-        : { 'Content-Type': 'application/json' };
+    const token = headers.Authorization ? headers.Authorization.split(' ')[1] : null;
+    const gqlHeaders = token
+      ? { Authorization: `bearer ${token}`, 'Content-Type': 'application/json' }
+      : { 'Content-Type': 'application/json' };
 
+    if (projectId) {
       const query = `
-        query($id: ID!) {
-          node(id: $id) {
+        query($projectId: ID!) {
+          node(id: $projectId) {
             ... on ProjectV2 {
-              items(first: 50) {
+              items(first: 100) {
                 nodes {
                   content {
                     ... on Issue { title url }
-                    ... on PullRequest { title url }
-                    ... on DraftIssue { title }
                   }
                 }
               }
@@ -155,13 +135,11 @@ async function loadTasks(headers, projectId) {
           }
         }
       `;
-
       const res = await fetch('https://api.github.com/graphql', {
         method: 'POST',
         headers: gqlHeaders,
-        body: JSON.stringify({ query, variables: { id: projectId } })
+        body: JSON.stringify({ query, variables: { projectId } })
       });
-
       if (!res.ok) {
         const li = document.createElement('li');
         li.textContent = 'No tasks found';
@@ -171,28 +149,18 @@ async function loadTasks(headers, projectId) {
 
       const data = await res.json();
       const items = data?.data?.node?.items?.nodes || [];
-      if (!items.length) {
-        const li = document.createElement('li');
-        li.textContent = 'No tasks found';
-        listEl.appendChild(li);
-        return;
-      }
-
-      items.forEach(item => {
-        const li = document.createElement('li');
-        if (item.content && item.content.url) {
+      items
+        .map(item => item.content)
+        .filter(c => c && c.url)
+        .forEach(task => {
+          const li = document.createElement('li');
           const a = document.createElement('a');
-          a.href = item.content.url;
-          a.textContent = item.content.title;
+          a.href = task.url;
+          a.textContent = task.title;
           a.target = '_blank';
           li.appendChild(a);
-        } else if (item.content && item.content.title) {
-          li.textContent = item.content.title;
-        } else {
-          li.textContent = 'Item';
-        }
-        listEl.appendChild(li);
-      });
+          listEl.appendChild(li);
+        });
       return;
     }
 
@@ -236,12 +204,11 @@ async function loadProjectBoard(headers, projectId) {
     const gqlHeaders = token
       ? { Authorization: `bearer ${token}`, 'Content-Type': 'application/json' }
       : { 'Content-Type': 'application/json' };
-    let projects = [];
-    if (projectId) {
-      const query = `
-        query($id: ID!) {
-          node(id: $id) {
-            ... on ProjectV2 {
+    const query = `
+      query($owner: String!, $repo: String!) {
+        repository(owner: $owner, name: $repo) {
+          projectsV2(first: 10) {
+            nodes {
               id
               title
               items(first: 50) {
@@ -369,7 +336,8 @@ async function loadProjectBoard(headers, projectId) {
       projectDiv.appendChild(columnsContainer);
       boardEl.appendChild(projectDiv);
     }
-    if (!projectId) populateProjectSelector(projects, headers);
+    populateProjectSelector(projects);
+    populateTaskProjectSelector(projects);
   } catch (err) {
     boardEl.textContent = 'Projects could not be loaded.';
     console.error(err);
@@ -388,9 +356,23 @@ function populateProjectSelector(projects, headers) {
   });
   select.onchange = e => {
     const value = e.target.value;
-    loadProjectBoard(headers, value || null);
+    document.querySelectorAll('#project-board .project').forEach(div => {
+      div.style.display = !value || div.dataset.id === value ? '' : 'none';
+    });
     loadTasks(headers, value || null);
-  };
+  });
+}
+
+function populateTaskProjectSelector(projects) {
+  const select = document.getElementById('task-project');
+  if (!select) return;
+  select.innerHTML = '<option value="">Select Project</option>';
+  projects.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = p.title;
+    select.appendChild(opt);
+  });
 }
 
 async function loadHolidayBits(headers) {
@@ -521,7 +503,7 @@ async function updateDayOrder(listEl, headers) {
 }
 
 async function loadItinerary(headers) {
-  const listEl = document.getElementById('itinerary-list');
+  const listEl = document.getElementById('itinerary-timeline');
   if (!listEl) return;
   listEl.innerHTML = '';
   resetItineraryMarkers();
@@ -628,18 +610,6 @@ async function loadItinerary(headers) {
 }
 
   function loadData() {
-    if (!owner) {
-      console.warn('GitHub owner could not be determined. Please configure it.');
-      let warnEl = document.getElementById('config-warning');
-      if (!warnEl) {
-        warnEl = document.createElement('div');
-        warnEl.id = 'config-warning';
-        warnEl.textContent = 'GitHub owner is not configured. Please set it via ?owner= or a meta tag.';
-        const container = document.querySelector('.container') || document.body;
-        container.insertBefore(warnEl, container.firstChild);
-      }
-      return;
-    }
     const token = getHolidayToken();
     let headers = {};
     if (token) {
@@ -750,6 +720,48 @@ function initImageFallback() {
   });
 }
 
+async function createProject(title) {
+  const token = getHolidayToken();
+  if (!token) {
+    alert('Please save a token first.');
+    return;
+  }
+  const headers = { Authorization: `bearer ${token}`, 'Content-Type': 'application/json' };
+  const ownerQuery = `
+    query($login: String!) {
+      user(login: $login) { id }
+    }
+  `;
+  const ownerRes = await fetch('https://api.github.com/graphql', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ query: ownerQuery, variables: { login: owner } })
+  });
+  const ownerData = await ownerRes.json();
+  const ownerId = ownerData?.data?.user?.id;
+  if (!ownerId) throw new Error('Unable to determine owner ID');
+  const mutation = `
+    mutation($input: CreateProjectV2Input!) {
+      createProjectV2(input: $input) {
+        projectV2 { id title }
+      }
+    }
+  `;
+  const res = await fetch('https://api.github.com/graphql', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      query: mutation,
+      variables: { input: { ownerId, title } }
+    })
+  });
+  const data = await res.json();
+  if (data.errors) {
+    throw new Error(data.errors.map(e => e.message).join(', '));
+  }
+  return data.data?.createProjectV2?.projectV2;
+}
+
 const saveBtn = document.getElementById('save-token');
 if (saveBtn) {
   saveBtn.addEventListener('click', () => {
@@ -764,6 +776,25 @@ if (saveBtn) {
 }
 
 
+const projectForm = document.getElementById('new-project-form');
+if (projectForm) {
+  projectForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const title = document.getElementById('project-title').value.trim();
+    const resultEl = document.getElementById('project-create-result');
+    try {
+      const project = await createProject(title);
+      if (project) {
+        if (resultEl) resultEl.textContent = `Project "${project.title}" created`;
+        projectForm.reset();
+        loadData();
+      }
+    } catch (err) {
+      if (resultEl) resultEl.textContent = `Error: ${err.message}`;
+    }
+  });
+}
+
 const taskForm = document.getElementById('task-form');
 if (taskForm) {
   taskForm.addEventListener('submit', async (e) => {
@@ -775,6 +806,7 @@ if (taskForm) {
     }
     const title = document.getElementById('task-title').value;
     const body = document.getElementById('task-body').value;
+    const projectId = document.getElementById('task-project').value;
     const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, {
       method: 'POST',
       headers: {
@@ -787,6 +819,30 @@ if (taskForm) {
     if (res.ok) {
       const data = await res.json();
       resultEl.innerHTML = `Task created: <a href="${data.html_url}" target="_blank">${data.number}</a>`;
+      if (projectId) {
+        try {
+          const mutation = `
+            mutation($projectId: ID!, $contentId: ID!) {
+              addProjectV2ItemById(input: { projectId: $projectId, contentId: $contentId }) {
+                item { id }
+              }
+            }
+          `;
+          await fetch('https://api.github.com/graphql', {
+            method: 'POST',
+            headers: {
+              Authorization: `bearer ${token}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              query: mutation,
+              variables: { projectId, contentId: data.node_id }
+            })
+          });
+        } catch (err) {
+          console.error('addProjectV2ItemById:', err);
+        }
+      }
       taskForm.reset();
       loadData();
     } else {
@@ -847,8 +903,6 @@ if (itineraryForm) {
 
 // Initial load
 document.addEventListener('DOMContentLoaded', () => {
-  const selector = document.getElementById('project-selector');
-  if (selector) selector.style.display = 'none';
   loadProjectDetails('holiday-adventures');
   initItineraryMap();
   loadData();
