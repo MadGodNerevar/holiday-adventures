@@ -514,6 +514,18 @@ function initAOS() {
   if (window.AOS) AOS.init();
 }
 
+function initImageFallback() {
+  const images = document.querySelectorAll('img');
+  images.forEach(img => {
+    img.addEventListener('error', () => {
+      if (!img.dataset.fallback) {
+        img.dataset.fallback = 'true';
+        img.src = 'assets/placeholder.svg';
+      }
+    });
+  });
+}
+
 const saveBtn = document.getElementById('save-token');
 if (saveBtn) {
   saveBtn.addEventListener('click', () => {
@@ -623,6 +635,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSectionObserver();
   initPlanner();
   initAOS();
+  initImageFallback();
 });
 window.addEventListener('scroll', () => {
   updateActiveNav();
