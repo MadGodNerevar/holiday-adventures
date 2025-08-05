@@ -60,24 +60,16 @@ function getHolidayToken() {
   return GITHUB_TOKEN || localStorage.getItem('HOLIDAY_TOKEN') || '';
 }
 
-async function loadUserProjects() {
+function loadUserProjects() {
   const selector = document.getElementById('project-selector');
   if (!selector) return;
-  try {
-    const res = await fetch(`https://api.github.com/users/${owner}/repos`);
-    if (!res.ok) throw new Error('Failed to load repositories');
-    const projects = await res.json();
-    selector.innerHTML = '';
-    projects.forEach(p => {
-      const option = document.createElement('option');
-      option.value = p.name;
-      option.textContent = p.name.replace(/-/g, ' ');
-      selector.appendChild(option);
-    });
-    selector.value = repo;
-  } catch (err) {
-    console.error('loadUserProjects:', err);
-  }
+  selector.innerHTML = '';
+  const option = document.createElement('option');
+  option.value = 'holiday-adventures';
+  option.textContent = 'holiday adventures';
+  selector.appendChild(option);
+  selector.value = 'holiday-adventures';
+  selector.style.display = 'none';
 }
 
 async function loadProjectDetails(project) {
@@ -616,7 +608,10 @@ if (itineraryForm) {
 
 // Initial load
 document.addEventListener('DOMContentLoaded', () => {
-  loadUserProjects().then(() => loadProjectDetails(repo));
+  const selector = document.getElementById('project-selector');
+  if (selector) selector.style.display = 'none';
+  repo = 'holiday-adventures';
+  loadProjectDetails('holiday-adventures');
   loadData();
   updateActiveNav();
   initAnimations();
