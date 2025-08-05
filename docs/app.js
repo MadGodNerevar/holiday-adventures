@@ -123,7 +123,7 @@ async function loadProjectDetails(project) {
   }
 }
 
-async function loadTasks(headers) {
+async function loadTasks(headers, projectId) {
   try {
     const listEl = document.getElementById('tasks-list');
     if (!listEl) {
@@ -131,6 +131,56 @@ async function loadTasks(headers) {
       return;
     }
     listEl.innerHTML = '';
+
+    const token = headers.Authorization ? headers.Authorization.split(' ')[1] : null;
+    const gqlHeaders = token
+      ? { Authorization: `bearer ${token}`, 'Content-Type': 'application/json' }
+      : { 'Content-Type': 'application/json' };
+
+    if (projectId) {
+      const query = `
+        query($projectId: ID!) {
+          node(id: $projectId) {
+            ... on ProjectV2 {
+              items(first: 100) {
+                nodes {
+                  content {
+                    ... on Issue { title url }
+                  }
+                }
+              }
+            }
+          }
+        }
+      `;
+      const res = await fetch('https://api.github.com/graphql', {
+        method: 'POST',
+        headers: gqlHeaders,
+        body: JSON.stringify({ query, variables: { projectId } })
+      });
+      if (!res.ok) {
+        const li = document.createElement('li');
+        li.textContent = 'No tasks found';
+        listEl.appendChild(li);
+        return;
+      }
+      const data = await res.json();
+      const items = data?.data?.node?.items?.nodes || [];
+      items
+        .map(item => item.content)
+        .filter(c => c && c.url)
+        .forEach(task => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = task.url;
+          a.textContent = task.title;
+          a.target = '_blank';
+          li.appendChild(a);
+          listEl.appendChild(li);
+        });
+      return;
+    }
+
     const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, { headers });
     if (!res.ok) {
       const li = document.createElement('li');
@@ -177,6 +227,7 @@ async function loadProjectBoard(headers) {
         repository(owner: $owner, name: $repo) {
           projectsV2(first: 10) {
             nodes {
+              id
               title
               items(first: 50) {
                 nodes {
@@ -216,7 +267,7 @@ async function loadProjectBoard(headers) {
     for (const project of projects) {
       const projectDiv = document.createElement('div');
       projectDiv.className = 'project';
-      projectDiv.dataset.title = project.title;
+      projectDiv.dataset.id = project.id;
       const projectTitle = document.createElement('h3');
       projectTitle.textContent = project.title;
       projectDiv.appendChild(projectTitle);
@@ -264,28 +315,29 @@ async function loadProjectBoard(headers) {
       projectDiv.appendChild(columnsContainer);
       boardEl.appendChild(projectDiv);
     }
-    populateProjectSelector(projects);
+    populateProjectSelector(projects, headers);
   } catch (err) {
     boardEl.textContent = 'Projects could not be loaded.';
     console.error(err);
   }
 }
 
-function populateProjectSelector(projects) {
+function populateProjectSelector(projects, headers) {
   const select = document.getElementById('project-select');
   if (!select) return;
   select.innerHTML = '<option value="">All Projects</option>';
   projects.forEach(p => {
     const opt = document.createElement('option');
-    opt.value = p.title;
+    opt.value = p.id;
     opt.textContent = p.title;
     select.appendChild(opt);
   });
   select.addEventListener('change', e => {
     const value = e.target.value;
     document.querySelectorAll('#project-board .project').forEach(div => {
-      div.style.display = !value || div.dataset.title === value ? '' : 'none';
+      div.style.display = !value || div.dataset.id === value ? '' : 'none';
     });
+    loadTasks(headers, value || null);
   });
 }
 
