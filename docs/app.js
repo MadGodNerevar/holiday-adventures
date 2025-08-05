@@ -25,6 +25,13 @@ const repo =
   window.location.pathname.split('/')[1] ||
   'holiday-adventures';
 
+// Access key for Unsplash API (required for destination images)
+const unsplashAccessKey =
+  queryParams.get('unsplashKey') ||
+  globalConfig.unsplashAccessKey ||
+  envConfig.UNSPLASH_ACCESS_KEY ||
+  '';
+
 function prefersReducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
@@ -259,6 +266,40 @@ async function loadHolidayBits(headers) {
   }
 }
 
+async function loadDestinationHighlights() {
+  const container = document.getElementById('destination-images');
+  if (!container) return;
+  container.innerHTML = '';
+  if (!unsplashAccessKey) {
+    container.textContent = 'Unsplash access key required.';
+    return;
+  }
+  const destinations = ['Paris', 'Tokyo', 'New York', 'Sydney', 'Cairo', 'Rio de Janeiro'];
+  try {
+    const photos = await Promise.all(
+      destinations.map(async dest => {
+        const res = await fetch(
+          `https://api.unsplash.com/search/photos?query=${encodeURIComponent(dest)}&orientation=landscape&per_page=1&client_id=${unsplashAccessKey}`
+        );
+        if (!res.ok) return null;
+        const data = await res.json();
+        return data.results[0];
+      })
+    );
+    photos.forEach(photo => {
+      if (!photo) return;
+      const img = document.createElement('img');
+      img.src = photo.urls.small;
+      img.alt = photo.alt_description || 'Travel photo';
+      img.loading = 'lazy';
+      container.appendChild(img);
+    });
+  } catch (err) {
+    container.textContent = 'Unable to load images.';
+    console.error('loadDestinationHighlights:', err);
+  }
+}
+
   function loadData() {
     if (!owner) {
       console.warn('GitHub owner could not be determined. Please configure it.');
@@ -399,6 +440,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updateActiveNav();
   initAnimations();
   initSectionObserver();
+  loadDestinationHighlights();
 });
 window.addEventListener('scroll', () => {
   updateActiveNav();
