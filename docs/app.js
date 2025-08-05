@@ -21,6 +21,22 @@ const repo =
   window.location.pathname.split('/')[1] ||
   'holiday-adventures';
 
+const root = document.documentElement;
+const themeToggle = document.getElementById('theme-toggle');
+const storedTheme = localStorage.getItem('theme');
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+const currentTheme = storedTheme || (prefersDark ? 'dark' : 'light');
+root.setAttribute('data-theme', currentTheme);
+if (themeToggle) {
+  themeToggle.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+  themeToggle.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    themeToggle.textContent = next === 'dark' ? '☀️' : '🌙';
+  });
+}
+
 function getHolidayToken() {
   return localStorage.getItem('HOLIDAY_TOKEN') || '';
 }
