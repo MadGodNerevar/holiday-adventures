@@ -44,19 +44,21 @@ holiday-adventures/
 3. Add or edit `.md` files with suggestions
 4. Open a pull request with your additions
 
-OR just open an **Issue** with the template to pitch something new!
+OR just open a **Task** with the template to pitch something new!
 
 ---
 
-## 🌐 Issue Tracker
+## 🌐 Task Tracker
 
-Browse existing issues and create new ones from our GitHub Pages site:
+Browse existing tasks (GitHub Issues) and create new ones from our GitHub Pages site:
 
 ```
 https://YOUR-USERNAME.github.io/holiday-adventures/
 ```
 
-To submit an issue, provide a personal access token with `repo` scope in the page's authentication section. The token is saved only in your browser storage under the key `HOLIDAY_TOKEN`.
+Tasks correspond to GitHub Issues, so you'll still see templates under `.github/ISSUE_TEMPLATE/` as required by GitHub.
+
+To submit a task, provide a personal access token with `repo` scope in the page's authentication section. The token is saved only in your browser storage under the key `HOLIDAY_TOKEN`.
 
 This static site is published from the `docs/` directory via a GitHub Actions workflow that deploys the build to the `gh-pages` branch.
 
