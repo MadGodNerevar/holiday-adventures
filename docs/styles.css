@@ -2,11 +2,17 @@
 
 body {
   font-family: Arial, sans-serif;
-  margin: 2rem;
+  margin: 0;
   background: linear-gradient(120deg, #b30000, #006400);
   background-image: radial-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px);
   background-size: 20px 20px;
   color: #fff;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(1rem, 5vw, 2rem);
 }
 
 section {
@@ -52,13 +58,24 @@ h2::before {
 }
 
 .columns {
-  display: flex;
+  display: grid;
   gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
 .column {
   border: 1px solid #f0c419;
   background: rgba(255, 255, 255, 0.8);
   padding: 0.5rem;
-  width: 200px;
+}
+
+@media (max-width: 600px) {
+  section {
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+  }
+
+  .columns {
+    grid-template-columns: 1fr;
+  }
 }

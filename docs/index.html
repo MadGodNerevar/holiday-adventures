@@ -7,45 +7,47 @@
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="banner">
-    <h1>🎄 Holiday Adventures Task Tracker 🎄</h1>
-  </header>
-  <section id="token">
-    <h2>Authentication</h2>
-    <p>Enter a GitHub personal access token with <code>repo</code> scope. The token is stored only in this browser as <code>HOLIDAY_TOKEN</code> in <code>localStorage</code>.</p>
-    <input type="password" id="token-input" placeholder="HOLIDAY_TOKEN" />
-    <button id="save-token">Save Token</button>
-  </section>
-  <section id="tasks">
-    <h2>Existing Tasks</h2>
-    <ul id="tasks-list"></ul>
-  </section>
+  <div class="container">
+    <header class="banner">
+      <h1>🎄 Holiday Adventures Task Tracker 🎄</h1>
+    </header>
+    <section id="token">
+      <h2>Authentication</h2>
+      <p>Enter a GitHub personal access token with <code>repo</code> scope. The token is stored only in this browser as <code>HOLIDAY_TOKEN</code> in <code>localStorage</code>.</p>
+      <input type="password" id="token-input" placeholder="HOLIDAY_TOKEN" />
+      <button id="save-token">Save Token</button>
+    </section>
+    <section id="tasks">
+      <h2>Existing Tasks</h2>
+      <ul id="tasks-list"></ul>
+    </section>
 
-  <section id="project-board">
-    <h2>Project Board</h2>
-    <div id="project-columns"></div>
-  </section>
+    <section id="project-board">
+      <h2>Project Board</h2>
+      <div id="project-columns"></div>
+    </section>
 
-  <section id="holiday-bits">
-    <h2>Holiday Bits</h2>
-    <div id="holiday-bits-container"></div>
-  </section>
-  
-  <section id="new-task">
-    <h2>Submit a New Task</h2>
-    <form id="task-form">
-      <label>
-        Title
-        <input type="text" id="task-title" required />
-      </label>
-      <label>
-        Description
-        <textarea id="task-body" required></textarea>
-      </label>
-      <button type="submit">Create Task</button>
-    </form>
-    <div id="task-result"></div>
-  </section>
+    <section id="holiday-bits">
+      <h2>Holiday Bits</h2>
+      <div id="holiday-bits-container"></div>
+    </section>
+
+    <section id="new-task">
+      <h2>Submit a New Task</h2>
+      <form id="task-form">
+        <label>
+          Title
+          <input type="text" id="task-title" required />
+        </label>
+        <label>
+          Description
+          <textarea id="task-body" required></textarea>
+        </label>
+        <button type="submit">Create Task</button>
+      </form>
+      <div id="task-result"></div>
+    </section>
+  </div>
 
   <script src="app.js"></script>
 </body>
