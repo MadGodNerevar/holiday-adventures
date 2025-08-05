@@ -177,7 +177,19 @@ async function loadHolidayBits(headers) {
   for (const { path, title } of sections) {
     try {
       const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, { headers });
-      if (!res.ok) continue;
+
+      if (res.status === 404) {
+        const note = document.createElement('div');
+        note.textContent = `No ${title} available`;
+        container.appendChild(note);
+        continue;
+      }
+
+      if (!res.ok) {
+        console.warn(`Failed to load ${title}: ${res.status}`);
+        continue;
+      }
+
       const files = await res.json();
       const sectionDiv = document.createElement('div');
       const h3 = document.createElement('h3');
@@ -198,7 +210,7 @@ async function loadHolidayBits(headers) {
       sectionDiv.appendChild(ul);
       container.appendChild(sectionDiv);
     } catch (err) {
-      console.error(err);
+      console.warn(`Unable to load ${title}`, err);
     }
   }
 }
