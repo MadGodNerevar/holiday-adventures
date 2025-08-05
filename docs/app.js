@@ -21,7 +21,6 @@ const repo =
   window.location.pathname.split('/')[1] ||
   'holiday-adventures';
 
-
 function getHolidayToken() {
   return localStorage.getItem('HOLIDAY_TOKEN') || '';
 }
@@ -186,7 +185,7 @@ async function loadHolidayBits(headers) {
       }
 
       if (!res.ok) {
-        console.warn(`Failed to load ${title}: ${res.status}`);
+        console.warn(`Failed to load ${path}: ${res.status}`);
         continue;
       }
 
