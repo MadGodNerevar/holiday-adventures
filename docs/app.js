@@ -159,6 +159,7 @@ async function loadProjectBoard(headers) {
         repository(owner: $owner, name: $repo) {
           projectsV2(first: 10) {
             nodes {
+              id
               title
               items(first: 50) {
                 nodes {
@@ -247,6 +248,7 @@ async function loadProjectBoard(headers) {
       boardEl.appendChild(projectDiv);
     }
     populateProjectSelector(projects);
+    populateTaskProjectSelector(projects);
   } catch (err) {
     boardEl.textContent = 'Projects could not be loaded.';
     console.error(err);
@@ -268,6 +270,18 @@ function populateProjectSelector(projects) {
     document.querySelectorAll('#project-board .project').forEach(div => {
       div.style.display = !value || div.dataset.title === value ? '' : 'none';
     });
+  });
+}
+
+function populateTaskProjectSelector(projects) {
+  const select = document.getElementById('task-project');
+  if (!select) return;
+  select.innerHTML = '<option value="">Select Project</option>';
+  projects.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = p.title;
+    select.appendChild(opt);
   });
 }
 
@@ -702,6 +716,7 @@ if (taskForm) {
     }
     const title = document.getElementById('task-title').value;
     const body = document.getElementById('task-body').value;
+    const projectId = document.getElementById('task-project').value;
     const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, {
       method: 'POST',
       headers: {
@@ -714,6 +729,30 @@ if (taskForm) {
     if (res.ok) {
       const data = await res.json();
       resultEl.innerHTML = `Task created: <a href="${data.html_url}" target="_blank">${data.number}</a>`;
+      if (projectId) {
+        try {
+          const mutation = `
+            mutation($projectId: ID!, $contentId: ID!) {
+              addProjectV2ItemById(input: { projectId: $projectId, contentId: $contentId }) {
+                item { id }
+              }
+            }
+          `;
+          await fetch('https://api.github.com/graphql', {
+            method: 'POST',
+            headers: {
+              Authorization: `bearer ${token}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              query: mutation,
+              variables: { projectId, contentId: data.node_id }
+            })
+          });
+        } catch (err) {
+          console.error('addProjectV2ItemById:', err);
+        }
+      }
       taskForm.reset();
       loadData();
     } else {
