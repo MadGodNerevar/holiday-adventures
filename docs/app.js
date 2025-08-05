@@ -399,7 +399,7 @@ async function updateDayOrder(listEl, headers) {
 }
 
 async function loadItinerary(headers) {
-  const listEl = document.getElementById('itinerary-list');
+  const listEl = document.getElementById('itinerary-timeline');
   if (!listEl) return;
   listEl.innerHTML = '';
   resetItineraryMarkers();
