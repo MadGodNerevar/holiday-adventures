@@ -9,6 +9,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="styles.css" />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-o9N1j7kzH0f+wJbJ2XESyqCCb72Wx3HE5g1Hn9gCnFE="
+    crossorigin=""
+  />
 </head>
 <body>
   <header class="banner">
@@ -26,9 +32,9 @@
 
     <section class="hero">
       <div class="hero-slideshow">
-        <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=1600&h=600&q=80" alt="Sunny desert" />
-        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&h=600&q=80" alt="Ocean waves" />
-        <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1600&h=600&q=80" alt="Forest trail" />
+        <img src="assets/hero-desert.svg" alt="Sunny desert" referrerpolicy="no-referrer" />
+        <img src="assets/hero-ocean.svg" alt="Ocean waves" referrerpolicy="no-referrer" />
+        <img src="assets/hero-forest.svg" alt="Forest trail" referrerpolicy="no-referrer" />
       </div>
       <div class="hero-tagline" data-aos="zoom-in">
         Your next adventure starts here
@@ -37,13 +43,6 @@
           <button class="btn-explore">Explore Destinations</button>
         </div>
       </div>
-    </section>
-
-    <section id="project-selector" data-aos="fade-up">
-      <h2>Project Selector</h2>
-      <select id="project-select" aria-label="Select project">
-        <option value="">Loading projects...</option>
-      </select>
     </section>
 
     <section id="planner" data-aos="fade-up">
@@ -58,56 +57,34 @@
       </ul>
     </section>
 
-    <section id="timeline" data-aos="fade-up">
-      <h2>Itinerary &amp; Memories</h2>
-      <div class="timeline">
-        <div class="timeline-item" data-aos="fade-up">
-          <span class="timeline-date">Day 1</span>
-          <p>Arrive at destination and explore the city.</p>
-        </div>
-        <div class="timeline-item" data-aos="fade-up">
-          <span class="timeline-date">Day 2</span>
-          <p>Adventure tour with friends.</p>
-        </div>
-        <div class="timeline-item" data-aos="fade-up">
-          <span class="timeline-date">Day 3</span>
-          <p>Relax and capture memories.</p>
-        </div>
-      </div>
-    </section>
-
     <section id="destinations" data-aos="fade-up">
       <h2>Destination Highlights</h2>
       <div class="destinations-grid">
         <div class="destination" data-aos="zoom-in">
-          <img src="https://source.unsplash.com/300x200/?paris" alt="Paris" />
+          <img src="assets/destination-paris.svg" alt="Paris" referrerpolicy="no-referrer" />
           <h3>Paris</h3>
         </div>
         <div class="destination" data-aos="zoom-in">
-          <img src="https://source.unsplash.com/300x200/?tokyo" alt="Tokyo" />
+          <img src="assets/destination-tokyo.svg" alt="Tokyo" referrerpolicy="no-referrer" />
           <h3>Tokyo</h3>
         </div>
         <div class="destination" data-aos="zoom-in">
-          <img src="https://source.unsplash.com/300x200/?newyork" alt="New York" />
+          <img src="assets/destination-newyork.svg" alt="New York" referrerpolicy="no-referrer" />
           <h3>New York</h3>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <div class="container">
-      <section id="token">
+      <section id="token" class="card">
         <h2>Authentication</h2>
-        <img src="https://source.unsplash.com/400x200/?lock" alt="Secure lock" class="section-image" loading="lazy" />
+        <img src="assets/lock.svg" alt="Secure lock" class="section-image" loading="lazy" referrerpolicy="no-referrer" />
         <p>Enter a GitHub personal access token with <code>repo</code> scope. The token is stored only in this browser as <code>HOLIDAY_TOKEN</code> in <code>localStorage</code>.</p>
         <label for="token-input">Personal Access Token</label>
         <input type="password" id="token-input" placeholder="HOLIDAY_TOKEN" />
         <button id="save-token">Save Token</button>
       </section>
 
-      <section id="projects">
+      <section id="projects" class="card">
         <h2>Projects</h2>
-        <label for="project-selector">Choose a project</label>
-        <select id="project-selector"></select>
         <p id="project-description"></p>
         <h3>Milestones</h3>
         <ul id="project-milestones"></ul>
@@ -117,29 +94,31 @@
 
       <section id="tasks">
         <h2>Tasks</h2>
-        <img src="https://source.unsplash.com/400x200/?todo" alt="Checklist" class="section-image" loading="lazy" />
+        <img src="assets/todo.svg" alt="Checklist" class="section-image" loading="lazy" referrerpolicy="no-referrer" />
         <ul id="tasks-list"></ul>
       </section>
 
       <section id="project-board">
         <h2>Project Board</h2>
-        <img src="https://source.unsplash.com/400x200/?planning" alt="Project planning board" class="section-image" loading="lazy" />
+        <img src="assets/planning.svg" alt="Project planning board" class="section-image" loading="lazy" referrerpolicy="no-referrer" />
         <div id="project-columns"></div>
       </section>
 
       <section id="holiday-bits">
         <h2>Travel Bits</h2>
-        <img src="https://source.unsplash.com/400x200/?travel" alt="Travel items" class="section-image" loading="lazy" />
+        <img src="assets/travel.svg" alt="Travel items" class="section-image" loading="lazy" referrerpolicy="no-referrer" />
         <div id="holiday-bits-container"></div>
       </section>
 
-      <section id="itinerary">
+      <section id="itinerary" class="card">
         <h2>Itinerary &amp; Memories</h2>
-        <img src="https://source.unsplash.com/400x200/?map" alt="Itinerary map" class="section-image" loading="lazy" />
+        <img src="assets/map.svg" alt="Itinerary map" class="section-image" loading="lazy" referrerpolicy="no-referrer" />
         <div id="itinerary-timeline"></div>
         <h3>Add or Update Entry</h3>
         <form id="itinerary-form">
           <input type="hidden" id="itinerary-issue-number" />
+          <label for="itinerary-day">Day</label>
+          <input type="number" id="itinerary-day" min="1" required />
           <label for="itinerary-destination">Destination</label>
           <input type="text" id="itinerary-destination" required />
           <label for="itinerary-activities">Activities</label>
@@ -155,9 +134,9 @@
         <div id="itinerary-result"></div>
       </section>
 
-      <section id="new-task">
+      <section id="new-task" class="card">
         <h2>Submit a New Task</h2>
-        <img src="https://source.unsplash.com/400x200/?pencil" alt="Writing a new task" class="section-image" loading="lazy" />
+        <img src="assets/pencil.svg" alt="Writing a new task" class="section-image" loading="lazy" referrerpolicy="no-referrer" />
         <form id="task-form">
           <label for="task-title">Title</label>
           <input type="text" id="task-title" required />
@@ -167,7 +146,7 @@
         </form>
         <div id="task-result"></div>
       </section>
-    </div>
+    </main>
 
     <footer class="site-footer">
       <div class="footer-content">
@@ -182,6 +161,11 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" integrity="sha512-16esztaSRplJROstbIIdwX3N97V1+pZvV33ABoG1H2OyTttBxEGkTsoIVsiP1iaTtM8b3+hu2kB6pQ4Clr5yug==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-p4/RXu1tz0bqGLW2kYnxLZ+fFNIpYwhzDWp1ZP4sha8="
+    crossorigin=""
+  ></script>
   <script type="module" src="app.js"></script>
 </body>
 </html>
