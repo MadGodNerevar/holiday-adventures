@@ -365,5 +365,5 @@ button:focus {
   min-height: auto;
   font-size: 1.5rem;
   cursor: pointer;
-  color: var(--text);
+  color: var(--color-text);
 }
