@@ -734,6 +734,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (selector) selector.style.display = 'none';
   repo = 'holiday-adventures';
   loadProjectDetails('holiday-adventures');
+  initItineraryMap();
   loadData();
   updateActiveNav();
   initAnimations();
