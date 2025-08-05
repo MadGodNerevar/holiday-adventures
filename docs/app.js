@@ -11,12 +11,16 @@ const owner =
   globalConfig.owner ||
   envConfig.GITHUB_OWNER ||
   window.location.hostname.split('.')[0];
+
+const repoMeta = document.querySelector('meta[name="repo"]');
 const repo =
   queryParams.get('repo') ||
   globalConfig.repo ||
   envConfig.GITHUB_REPO ||
+  (repoMeta ? repoMeta.getAttribute('content') : null) ||
   window.location.pathname.split('/')[1] ||
   'holiday-adventures';
+
 
 function getHolidayToken() {
   return localStorage.getItem('HOLIDAY_TOKEN') || '';
