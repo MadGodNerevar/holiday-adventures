@@ -3,10 +3,10 @@
 body {
   font-family: 'Poppins', sans-serif;
   margin: 2rem;
-  background: linear-gradient(120deg, #00b4d8, #ffb703);
-  background-image: radial-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px);
+  background: linear-gradient(120deg, #c4f1f9, #ffe8d6);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 1px);
   background-size: 20px 20px;
-  color: #fff;
+  color: #222;
 }
 
 .container {
@@ -62,14 +62,37 @@ h2::before {
   justify-content: center;
   gap: 1rem;
   margin-bottom: 2rem;
-  background: rgba(0, 0, 0, 0.2);
-  padding: 0.5rem;
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 1rem;
+  border-radius: 12px;
 }
 
 .main-nav a {
-  color: #f0c419;
+  display: inline-block;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  background: #ffb703;
+  color: #023047;
   text-decoration: none;
+  font-weight: 700;
+  min-width: 44px;
+  min-height: 44px;
+  text-align: center;
+  transition: background-color 0.3s, color 0.3s, transform 0.2s;
+}
+
+.main-nav a:hover {
+  background: #fb8500;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.main-nav a:focus,
+.main-nav a.active {
+  outline: 3px solid #023047;
+  outline-offset: 2px;
+  background: #ffd166;
+  color: #023047;
 }
 
 @media (max-width: 600px) {
