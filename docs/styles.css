@@ -68,31 +68,34 @@ h2::before {
 }
 
 .main-nav a {
-  display: inline-block;
+  display: inline-flex; /* from Codex for icons */
+  align-items: center;  /* from Codex for icons */
+  gap: 0.25rem;         /* from Codex for icons */
   padding: 0.75rem 1.25rem;
   border-radius: 8px;
   background: #ffb703;
   color: #023047;
   text-decoration: none;
-  font-weight: 700;
-  min-width: 44px;
-  min-height: 44px;
-  text-align: center;
-  transition: background-color 0.3s, color 0.3s, transform 0.2s;
+  font-weight: 700;      /* from main */
+  min-width: 44px;       /* from main */
+  min-height: 44px;      /* from main */
+  text-align: center;    /* from main */
+  transition: background-color 0.3s, color 0.3s, transform 0.2s; /* from main */
 }
 
 .main-nav a:hover {
-  background: #fb8500;
+  background: #fb8500;   /* from main */
   color: #fff;
-  transform: translateY(-2px);
+  transform: translateY(-2px); /* from main */
+  text-decoration: underline;  /* from Codex */
 }
 
 .main-nav a:focus,
 .main-nav a.active {
-  outline: 3px solid #023047;
-  outline-offset: 2px;
-  background: #ffd166;
-  color: #023047;
+  outline: 3px solid #023047;  /* from main */
+  outline-offset: 2px;         /* from main */
+  background: #ffd166;         /* from main */
+  color: #023047;              /* from main */
 }
 
 @media (max-width: 600px) {
