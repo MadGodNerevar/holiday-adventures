@@ -7,6 +7,10 @@ function getHolidayToken() {
 
 async function loadTasks(headers) {
   const listEl = document.getElementById('tasks-list');
+  if (!listEl) {
+    console.warn('Tasks list element not found');
+    return;
+  }
   listEl.innerHTML = '';
   try {
     const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, { headers });
@@ -31,6 +35,10 @@ async function loadTasks(headers) {
 
 async function loadProjectBoard(headers) {
   const boardEl = document.getElementById('project-columns');
+  if (!boardEl) {
+    console.warn('Project columns element not found');
+    return;
+  }
   boardEl.innerHTML = '';
   try {
     const projectRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/projects`, {
@@ -144,44 +152,50 @@ function loadData() {
   loadHolidayBits(headers);
 }
 
-document.getElementById('save-token').addEventListener('click', () => {
-  const tokenInput = document.getElementById('token-input');
-  const val = tokenInput.value.trim();
-  if (val) {
-    localStorage.setItem('HOLIDAY_TOKEN', val);
-    tokenInput.value = '';
-    loadData();
-  }
-});
-
-document.getElementById('task-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const token = getHolidayToken();
-  if (!token) {
-    alert('Please save a token first.');
-    return;
-  }
-  const title = document.getElementById('task-title').value;
-  const body = document.getElementById('task-body').value;
-  const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, {
-    method: 'POST',
-    headers: {
-      Authorization: `token ${token}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ title, body })
+const saveBtn = document.getElementById('save-token');
+if (saveBtn) {
+  saveBtn.addEventListener('click', () => {
+    const tokenInput = document.getElementById('token-input');
+    const val = tokenInput.value.trim();
+    if (val) {
+      localStorage.setItem('HOLIDAY_TOKEN', val);
+      tokenInput.value = '';
+      loadData();
+    }
   });
-  const resultEl = document.getElementById('task-result');
-  if (res.ok) {
-    const data = await res.json();
-    resultEl.innerHTML = `Task created: <a href="${data.html_url}" target="_blank">${data.number}</a>`;
-    document.getElementById('task-form').reset();
-    loadData();
-  } else {
-    const err = await res.json();
-    resultEl.textContent = `Error: ${err.message}`;
-  }
-});
+}
+
+const taskForm = document.getElementById('task-form');
+if (taskForm) {
+  taskForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const token = getHolidayToken();
+    if (!token) {
+      alert('Please save a token first.');
+      return;
+    }
+    const title = document.getElementById('task-title').value;
+    const body = document.getElementById('task-body').value;
+    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, {
+      method: 'POST',
+      headers: {
+        Authorization: `token ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ title, body })
+    });
+    const resultEl = document.getElementById('task-result');
+    if (res.ok) {
+      const data = await res.json();
+      resultEl.innerHTML = `Task created: <a href="${data.html_url}" target="_blank">${data.number}</a>`;
+      taskForm.reset();
+      loadData();
+    } else {
+      const err = await res.json();
+      resultEl.textContent = `Error: ${err.message}`;
+    }
+  });
+}
 
 // Initial load
-loadData();
+document.addEventListener('DOMContentLoaded', loadData);
