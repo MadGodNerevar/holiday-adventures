@@ -31,31 +31,30 @@ function prefersReducedMotion() {
 
 function initTheme() {
   const root = document.documentElement;
-  const selector = document.getElementById('theme-selector');
+  const toggle = document.getElementById('dark-mode-toggle');
   const storedTheme = localStorage.getItem('theme');
   const media = window.matchMedia('(prefers-color-scheme: dark)');
   const currentTheme = storedTheme || (media.matches ? 'dark' : 'light');
   root.setAttribute('data-theme', currentTheme);
-  if (selector) selector.value = currentTheme;
+  if (toggle) toggle.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
 
   media.addEventListener('change', e => {
     if (!localStorage.getItem('theme')) {
       const newTheme = e.matches ? 'dark' : 'light';
       root.setAttribute('data-theme', newTheme);
-      if (selector) selector.value = newTheme;
+      if (toggle) toggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
     }
   });
 
-  if (selector) {
-    selector.addEventListener('change', e => {
-      const theme = e.target.value;
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      const theme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       root.setAttribute('data-theme', theme);
       localStorage.setItem('theme', theme);
+      toggle.textContent = theme === 'dark' ? '☀️' : '🌙';
     });
   }
 }
-
-document.addEventListener('DOMContentLoaded', initTheme);
 
 function getHolidayToken() {
   return localStorage.getItem('HOLIDAY_TOKEN') || '';
@@ -299,25 +298,20 @@ function updateActiveNav() {
   links.forEach(link => link.classList.toggle('active', link === activeLink));
 }
 
-function startHeroSlideshow() {
-  const slides = document.querySelectorAll('.hero-slideshow img');
-  if (!slides.length) return;
-  let index = 0;
-  slides[index].classList.add('active');
-  if (prefersReducedMotion() || slides.length === 1) return;
-  setInterval(() => {
-    slides[index].classList.remove('active');
-    index = (index + 1) % slides.length;
-    slides[index].classList.add('active');
-  }, 5000);
-}
-
 function initAnimations() {
   if (!prefersReducedMotion() && window.gsap) {
     gsap.from('.main-nav a', { y: -20, opacity: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out' });
     gsap.from('.hero-tagline', { y: 50, opacity: 0, duration: 1, ease: 'power2.out' });
+    gsap.to('.hero', { backgroundPosition: '400% 0', duration: 20, ease: 'linear', repeat: -1 });
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        gsap.to(card, { y: -10, duration: 0.3, boxShadow: '0 8px 20px rgba(0,0,0,0.2)' });
+      });
+      card.addEventListener('mouseleave', () => {
+        gsap.to(card, { y: 0, duration: 0.3, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' });
+      });
+    });
   }
-  startHeroSlideshow();
 }
 
 function handleHeroScroll() {
@@ -395,6 +389,7 @@ if (taskForm) {
 
 // Initial load
 document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
   loadData();
   updateActiveNav();
   initAnimations();

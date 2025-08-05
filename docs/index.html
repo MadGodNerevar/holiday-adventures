@@ -9,17 +9,10 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="container">
-    <header class="banner">
-      <h1>✈️ Adventure Holiday's Tracker ✈️</h1>
-      <select id="theme-selector" aria-label="Select theme">
-        <option value="light">Light</option>
-        <option value="dark">Dark</option>
-        <option value="sun">Sun</option>
-        <option value="sea">Sea</option>
-        <option value="forest">Forest</option>
-      </select>
-    </header>
+  <header class="banner">
+    <h1>✈️ Adventure Holiday's Tracker ✈️</h1>
+    <button id="dark-mode-toggle" aria-label="Toggle dark mode">🌙</button>
+  </header>
 
   <nav class="main-nav">
     <a href="#tasks"><span class="nav-icon">📝</span>Tasks</a>
@@ -27,55 +20,58 @@
     <a href="#holiday-bits"><span class="nav-icon">🎒</span>Holiday Bits</a>
   </nav>
 
-  <section class="hero">
-    <div class="hero-slideshow">
-      <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=1600&h=600&q=80" alt="Sunny desert" />
-      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&h=600&q=80" alt="Ocean waves" />
-      <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1600&h=600&q=80" alt="Forest trail" />
-    </div>
-    <div class="hero-tagline">Your next adventure starts here</div>
-  </section>
-
   <div class="container">
-    <section id="token">
-      <h2>Authentication</h2>
-      <img src="https://source.unsplash.com/400x200/?lock" alt="Secure lock" class="section-image" loading="lazy" />
-      <p>Enter a GitHub personal access token with <code>repo</code> scope. The token is stored only in this browser as <code>HOLIDAY_TOKEN</code> in <code>localStorage</code>.</p>
-      <label for="token-input">Personal Access Token</label>
-      <input type="password" id="token-input" placeholder="HOLIDAY_TOKEN" />
-      <button id="save-token">Save Token</button>
+    <section class="hero">
+      <h2 class="hero-tagline">Your next adventure starts here</h2>
+      <div class="hero-icons">
+        <span>✈️</span>
+        <span>🧳</span>
+        <span>🌍</span>
+        <span>📸</span>
+      </div>
     </section>
 
-    <section id="tasks">
-      <h2>Tasks</h2>
-      <img src="https://source.unsplash.com/400x200/?todo" alt="Checklist" class="section-image" loading="lazy" />
-      <ul id="tasks-list"></ul>
-    </section>
+    <div class="cards">
+      <section id="token" class="card">
+        <h2>Authentication</h2>
+        <img src="https://source.unsplash.com/400x200/?lock" alt="Secure lock" class="section-image" loading="lazy" />
+        <p>Enter a GitHub personal access token with <code>repo</code> scope. The token is stored only in this browser as <code>HOLIDAY_TOKEN</code> in <code>localStorage</code>.</p>
+        <label for="token-input">Personal Access Token</label>
+        <input type="password" id="token-input" placeholder="HOLIDAY_TOKEN" />
+        <button id="save-token">Save Token</button>
+      </section>
 
-    <section id="project-board">
-      <h2>Project Board</h2>
-      <img src="https://source.unsplash.com/400x200/?planning" alt="Project planning board" class="section-image" loading="lazy" />
-      <div id="project-columns"></div>
-    </section>
+      <section id="tasks" class="card">
+        <h2>Tasks</h2>
+        <img src="https://source.unsplash.com/400x200/?todo" alt="Checklist" class="section-image" loading="lazy" />
+        <ul id="tasks-list"></ul>
+      </section>
 
-    <section id="holiday-bits">
-      <h2>Travel Bits</h2>
-      <img src="https://source.unsplash.com/400x200/?travel" alt="Travel items" class="section-image" loading="lazy" />
-      <div id="holiday-bits-container"></div>
-    </section>
+      <section id="project-board" class="card">
+        <h2>Project Board</h2>
+        <img src="https://source.unsplash.com/400x200/?planning" alt="Project planning board" class="section-image" loading="lazy" />
+        <div id="project-columns"></div>
+      </section>
 
-    <section id="new-task">
-      <h2>Submit a New Task</h2>
-      <img src="https://source.unsplash.com/400x200/?pencil" alt="Writing a new task" class="section-image" loading="lazy" />
-      <form id="task-form">
-        <label for="task-title">Title</label>
-        <input type="text" id="task-title" required />
-        <label for="task-body">Description</label>
-        <textarea id="task-body" required></textarea>
-        <button type="submit">Create Task</button>
-      </form>
-      <div id="task-result"></div>
-    </section>
+      <section id="holiday-bits" class="card">
+        <h2>Travel Bits</h2>
+        <img src="https://source.unsplash.com/400x200/?travel" alt="Travel items" class="section-image" loading="lazy" />
+        <div id="holiday-bits-container"></div>
+      </section>
+
+      <section id="new-task" class="card">
+        <h2>Submit a New Task</h2>
+        <img src="https://source.unsplash.com/400x200/?pencil" alt="Writing a new task" class="section-image" loading="lazy" />
+        <form id="task-form">
+          <label for="task-title">Title</label>
+          <input type="text" id="task-title" required />
+          <label for="task-body">Description</label>
+          <textarea id="task-body" required></textarea>
+          <button type="submit">Create Task</button>
+        </form>
+        <div id="task-result"></div>
+      </section>
+    </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" integrity="sha512-5keOAkznBWCG2lLBVmOAXoJ2i8LojRxurx8WcN6i/K3PaY5E9O+V1YxAECEV4VpWw2X2gYdEx+kt1/3uzMdKug==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
