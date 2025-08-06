@@ -283,7 +283,6 @@ async function loadProjectBoard(headers, projectId) {
     }
     if (!projects.length) {
       boardEl.textContent = 'No projects found';
-      if (!projectId) populateProjectSelector([], headers);
       return;
     }
     for (const project of projects) {
@@ -337,31 +336,11 @@ async function loadProjectBoard(headers, projectId) {
       projectDiv.appendChild(columnsContainer);
       boardEl.appendChild(projectDiv);
     }
-    populateProjectSelector(projects);
     populateTaskProjectSelector(projects);
   } catch (err) {
     boardEl.textContent = 'Projects could not be loaded.';
     console.error(err);
   }
-}
-
-function populateProjectSelector(projects, headers) {
-  const select = document.getElementById('project-select');
-  if (!select) return;
-  select.innerHTML = '<option value="">All Projects</option>';
-  projects.forEach(p => {
-    const opt = document.createElement('option');
-    opt.value = p.id;
-    opt.textContent = p.title;
-    select.appendChild(opt);
-  });
-  select.onchange = e => {
-    const value = e.target.value;
-    document.querySelectorAll('#project-board .project').forEach(div => {
-      div.style.display = !value || div.dataset.id === value ? '' : 'none';
-    });
-    loadTasks(headers, value || null);
-  };
 }
 
 function populateTaskProjectSelector(projects) {
@@ -906,6 +885,7 @@ if (itineraryForm) {
 document.addEventListener('DOMContentLoaded', () => {
   loadProjectDetails('holiday-adventures');
   initItineraryMap();
+  initTheme();
   loadData();
   updateActiveNav();
   initAnimations();
