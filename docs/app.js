@@ -199,7 +199,7 @@ async function loadTasks(headers, destinationId) {
   }
 }
 
-async function loadProjectBoard(headers, projectId) {
+async function loadDestinationBoard(headers, projectId) {
   const boardEl = document.getElementById('destination-columns');
   if (!boardEl) {
     console.warn('Destination columns element not found');
