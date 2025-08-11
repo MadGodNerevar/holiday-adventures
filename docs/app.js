@@ -27,13 +27,19 @@ function initTheme() {
   const media = window.matchMedia('(prefers-color-scheme: dark)');
   const currentTheme = storedTheme || (media.matches ? 'dark' : 'light');
   root.setAttribute('data-theme', currentTheme);
-  if (toggle) toggle.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+  if (toggle) {
+    toggle.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+    toggle.setAttribute('aria-pressed', currentTheme === 'dark');
+  }
 
   media.addEventListener('change', e => {
     if (!localStorage.getItem('theme')) {
       const newTheme = e.matches ? 'dark' : 'light';
       root.setAttribute('data-theme', newTheme);
-      if (toggle) toggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+      if (toggle) {
+        toggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+        toggle.setAttribute('aria-pressed', newTheme === 'dark');
+      }
     }
   });
 
@@ -43,6 +49,7 @@ function initTheme() {
       root.setAttribute('data-theme', theme);
       localStorage.setItem('theme', theme);
       toggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+      toggle.setAttribute('aria-pressed', theme === 'dark');
     });
   }
 }
