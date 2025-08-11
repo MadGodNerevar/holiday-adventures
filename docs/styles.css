@@ -6,14 +6,12 @@
   --bg-color: var(--sand);
   --color-text: #222;
   --card-bg: #ffffff;
-  --color-surface-alt: #f8f9fa;
 
   /* Section defaults */
   --section-border: rgba(0, 0, 0, 0.1);
   --section-shadow: rgba(0, 0, 0, 0.05);
   --section-text: var(--color-text);
   --section-bg-odd: var(--color-surface);
-  --section-bg-even: var(--color-surface-alt);
   --section-image-shadow: rgba(0, 0, 0, 0.05);
   --hero-tagline-bg: rgba(0, 0, 0, 0.5);
 
@@ -54,14 +52,13 @@
   --color-text: #f4e1d2;
   --color-text-inverse: #0d1b2a;
   --color-surface: #1b263b;
-  --color-surface-alt: #16222f;
+  --bg-color: #16222f;
 
   /* Section defaults */
   --section-border: rgba(255, 255, 255, 0.1);
   --section-shadow: rgba(0, 0, 0, 0.4);
   --section-text: var(--color-text);
   --section-bg-odd: var(--color-surface);
-  --section-bg-even: var(--color-surface-alt);
   --section-image-shadow: rgba(0, 0, 0, 0.4);
   --hero-tagline-bg: rgba(0, 0, 0, 0.6);
 
@@ -88,7 +85,7 @@
 body {
   margin: 0;
   font-family: 'Open Sans', sans-serif;
-  background: var(--color-surface-alt);
+  background: var(--bg-color);
   color: var(--color-text);
   line-height: 1.6;
   font-size: var(--font-size-base);
