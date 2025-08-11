@@ -187,7 +187,7 @@ h2::before {
 }
 
 #destination-board h2::before {
-  content: '🧭';
+  content: '🗂️';
 }
 
 #holiday-bits h2::before {
