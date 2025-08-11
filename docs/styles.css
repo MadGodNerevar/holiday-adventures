@@ -186,8 +186,8 @@ h2::before {
   content: '📋';
 }
 
-#project-board h2::before {
-  content: '🗂️';
+#destination-board h2::before {
+  content: '🧭';
 }
 
 #holiday-bits h2::before {
@@ -339,7 +339,7 @@ button:hover {
 }
 
 @media (min-width: 768px) {
-  #project-board,
+  #destination-board,
   form.card {
     grid-template-columns: 1fr 1fr;
   }
