@@ -1,6 +1,6 @@
 # 🌴 Mersea Island Weekend — July 2025
 
-A collaborative GitHub Project overview for our Mersea Island escape 🏖️💜
+A collaborative destination project overview for our Mersea Island escape 🏖️💜
 
 ---
 
