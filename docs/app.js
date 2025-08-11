@@ -51,21 +51,21 @@ function getHolidayToken() {
   return GITHUB_TOKEN || localStorage.getItem('HOLIDAY_TOKEN') || '';
 }
 
-async function loadProjectDetails(project) {
-  const descEl = document.getElementById('project-description');
-  const milestonesEl = document.getElementById('project-milestones');
-  const issuesEl = document.getElementById('project-issues');
+async function loadDestinationDetails(destination) {
+  const descEl = document.getElementById('destination-description');
+  const milestonesEl = document.getElementById('destination-milestones');
+  const issuesEl = document.getElementById('destination-issues');
   if (descEl) descEl.textContent = '';
   if (milestonesEl) milestonesEl.innerHTML = '';
   if (issuesEl) issuesEl.innerHTML = '';
   try {
-    const repoRes = await fetch(`https://api.github.com/repos/${owner}/${project}`);
+    const repoRes = await fetch(`https://api.github.com/repos/${owner}/${destination}`);
     if (repoRes.ok && descEl) {
       const repoData = await repoRes.json();
       descEl.textContent = repoData.description || 'No description provided';
     }
 
-    const milestoneRes = await fetch(`https://api.github.com/repos/${owner}/${project}/milestones`);
+    const milestoneRes = await fetch(`https://api.github.com/repos/${owner}/${destination}/milestones`);
     if (milestoneRes.ok && milestonesEl) {
       const milestones = await milestoneRes.json();
       if (milestones.length) {
@@ -81,7 +81,7 @@ async function loadProjectDetails(project) {
       }
     }
 
-    const issuesRes = await fetch(`https://api.github.com/repos/${owner}/${project}/issues`);
+    const issuesRes = await fetch(`https://api.github.com/repos/${owner}/${destination}/issues`);
     if (issuesRes.ok && issuesEl) {
       const issues = await issuesRes.json();
       if (issues.length) {
@@ -101,11 +101,11 @@ async function loadProjectDetails(project) {
       }
     }
   } catch (err) {
-    console.error('loadProjectDetails:', err);
-  }
+    console.error('loadDestinationDetails:', err);
+}
 }
 
-async function loadTasks(headers, projectId) {
+async function loadTasks(headers, destinationId) {
   try {
     const listEl = document.getElementById('tasks-list');
     if (!listEl) {
@@ -119,7 +119,7 @@ async function loadTasks(headers, projectId) {
       ? { Authorization: `bearer ${token}`, 'Content-Type': 'application/json' }
       : { 'Content-Type': 'application/json' };
 
-    if (projectId) {
+    if (destinationId) {
       const query = `
         query($projectId: ID!) {
           node(id: $projectId) {
@@ -138,7 +138,7 @@ async function loadTasks(headers, projectId) {
       const res = await fetch('https://api.github.com/graphql', {
         method: 'POST',
         headers: gqlHeaders,
-        body: JSON.stringify({ query, variables: { projectId } })
+        body: JSON.stringify({ query, variables: { projectId: destinationId } })
       });
       if (!res.ok) {
         const li = document.createElement('li');
@@ -192,10 +192,10 @@ async function loadTasks(headers, projectId) {
   }
 }
 
-async function loadProjectBoard(headers, projectId) {
-  const boardEl = document.getElementById('project-columns');
+async function loadDestinationBoard(headers, destinationId) {
+  const boardEl = document.getElementById('destination-columns');
   if (!boardEl) {
-    console.warn('Project columns element not found');
+    console.warn('Destination columns element not found');
     return;
   }
   boardEl.innerHTML = '';
@@ -204,8 +204,8 @@ async function loadProjectBoard(headers, projectId) {
     const gqlHeaders = token
       ? { Authorization: `bearer ${token}`, 'Content-Type': 'application/json' }
       : { 'Content-Type': 'application/json' };
-    let projects = [];
-    if (projectId) {
+    let destinations = [];
+    if (destinationId) {
       const query = `
         query($id: ID!) {
           node(id: $id) {
@@ -233,15 +233,15 @@ async function loadProjectBoard(headers, projectId) {
           }
         }
       `;
-      const projectRes = await fetch('https://api.github.com/graphql', {
+      const destinationRes = await fetch('https://api.github.com/graphql', {
         method: 'POST',
         headers: gqlHeaders,
-        body: JSON.stringify({ query, variables: { id: projectId } })
+        body: JSON.stringify({ query, variables: { id: destinationId } })
       });
-      if (!projectRes.ok) throw new Error('Failed to fetch project');
-      const projectData = await projectRes.json();
-      const node = projectData?.data?.node;
-      projects = node ? [node] : [];
+      if (!destinationRes.ok) throw new Error('Failed to fetch destination');
+      const destinationData = await destinationRes.json();
+      const node = destinationData?.data?.node;
+      destinations = node ? [node] : [];
     } else {
       const query = `
         query($owner: String!, $repo: String!) {
@@ -272,31 +272,31 @@ async function loadProjectBoard(headers, projectId) {
           }
         }
       `;
-      const projectRes = await fetch('https://api.github.com/graphql', {
+      const destinationRes = await fetch('https://api.github.com/graphql', {
         method: 'POST',
         headers: gqlHeaders,
         body: JSON.stringify({ query, variables: { owner, repo } })
       });
-      if (!projectRes.ok) throw new Error('Failed to fetch projects');
-      const projectData = await projectRes.json();
-      projects = projectData?.data?.repository?.projectsV2?.nodes || [];
+      if (!destinationRes.ok) throw new Error('Failed to fetch destinations');
+      const destinationData = await destinationRes.json();
+      destinations = destinationData?.data?.repository?.projectsV2?.nodes || [];
     }
-    if (!projects.length) {
-      boardEl.textContent = 'No projects found';
+    if (!destinations.length) {
+      boardEl.textContent = 'No destinations found';
       return;
     }
-    for (const project of projects) {
-      const projectDiv = document.createElement('div');
-      projectDiv.className = 'project';
-      projectDiv.dataset.id = project.id;
-      const projectTitle = document.createElement('h3');
-      projectTitle.textContent = project.title;
-      projectDiv.appendChild(projectTitle);
+    for (const destination of destinations) {
+      const destinationDiv = document.createElement('div');
+      destinationDiv.className = 'destination';
+      destinationDiv.dataset.id = destination.id;
+      const destinationTitle = document.createElement('h3');
+      destinationTitle.textContent = destination.title;
+      destinationDiv.appendChild(destinationTitle);
 
       const columnsContainer = document.createElement('div');
       columnsContainer.className = 'columns';
       const columnMap = {};
-      project.items.nodes.forEach(item => {
+      destination.items.nodes.forEach(item => {
         let status = 'No Status';
         item.fieldValues.nodes.forEach(fv => {
           if (fv.field && fv.field.name === 'Status' && fv.name) {
@@ -333,24 +333,24 @@ async function loadProjectBoard(headers, projectId) {
         columnsContainer.appendChild(columnDiv);
       });
 
-      projectDiv.appendChild(columnsContainer);
-      boardEl.appendChild(projectDiv);
+      destinationDiv.appendChild(columnsContainer);
+      boardEl.appendChild(destinationDiv);
     }
-    populateTaskProjectSelector(projects);
+    populateTaskDestinationSelector(destinations);
   } catch (err) {
-    boardEl.textContent = 'Projects could not be loaded.';
+    boardEl.textContent = 'Destinations could not be loaded.';
     console.error(err);
   }
 }
 
-function populateTaskProjectSelector(projects) {
-  const select = document.getElementById('task-project');
+function populateTaskDestinationSelector(destinations) {
+  const select = document.getElementById('task-destination');
   if (!select) return;
-  select.innerHTML = '<option value="">Select Project</option>';
-  projects.forEach(p => {
+  select.innerHTML = '<option value="">Select Destination</option>';
+  destinations.forEach(d => {
     const opt = document.createElement('option');
-    opt.value = p.id;
-    opt.textContent = p.title;
+    opt.value = d.id;
+    opt.textContent = d.title;
     select.appendChild(opt);
   });
 }
@@ -363,8 +363,7 @@ async function loadHolidayBits(headers) {
     { path: 'destinations', title: 'Destinations' },
     { path: 'ideas', title: 'Ideas' },
     { path: 'packing-lists', title: 'Packing Lists' },
-    { path: 'itinerary-templates', title: 'Itinerary Templates' },
-    { path: 'projects', title: 'Projects' }
+    { path: 'itinerary-templates', title: 'Itinerary Templates' }
   ];
   for (const { path, title } of sections) {
     try {
@@ -594,7 +593,7 @@ async function loadItinerary(headers) {
       headers = { Authorization: `${isFineGrained ? 'Bearer' : 'token'} ${token}` };
     }
     loadTasks(headers);
-    loadProjectBoard(headers);
+    loadDestinationBoard(headers);
     loadHolidayBits(headers);
     loadItinerary(headers);
   }
@@ -696,7 +695,7 @@ function initImageFallback() {
   });
 }
 
-async function createProject(title) {
+async function createDestination(title) {
   const token = getHolidayToken();
   if (!token) {
     alert('Please save a token first.');
@@ -752,17 +751,17 @@ if (saveBtn) {
 }
 
 
-const projectForm = document.getElementById('new-project-form');
-if (projectForm) {
-  projectForm.addEventListener('submit', async e => {
+const destinationForm = document.getElementById('new-destination-form');
+if (destinationForm) {
+  destinationForm.addEventListener('submit', async e => {
     e.preventDefault();
-    const title = document.getElementById('project-title').value.trim();
-    const resultEl = document.getElementById('project-create-result');
+    const title = document.getElementById('destination-title').value.trim();
+    const resultEl = document.getElementById('destination-create-result');
     try {
-      const project = await createProject(title);
-      if (project) {
-        if (resultEl) resultEl.textContent = `Project "${project.title}" created`;
-        projectForm.reset();
+      const destination = await createDestination(title);
+      if (destination) {
+        if (resultEl) resultEl.textContent = `Destination "${destination.title}" created`;
+        destinationForm.reset();
         loadData();
       }
     } catch (err) {
@@ -782,7 +781,7 @@ if (taskForm) {
     }
     const title = document.getElementById('task-title').value;
     const body = document.getElementById('task-body').value;
-    const projectId = document.getElementById('task-project').value;
+    const destinationId = document.getElementById('task-destination').value;
     const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, {
       method: 'POST',
       headers: {
@@ -795,7 +794,7 @@ if (taskForm) {
     if (res.ok) {
       const data = await res.json();
       resultEl.innerHTML = `Task created: <a href="${data.html_url}" target="_blank">${data.number}</a>`;
-      if (projectId) {
+      if (destinationId) {
         try {
           const mutation = `
             mutation($projectId: ID!, $contentId: ID!) {
@@ -812,7 +811,7 @@ if (taskForm) {
             },
             body: JSON.stringify({
               query: mutation,
-              variables: { projectId, contentId: data.node_id }
+              variables: { projectId: destinationId, contentId: data.node_id }
             })
           });
         } catch (err) {
@@ -879,7 +878,7 @@ if (itineraryForm) {
 
 // Initial load
 document.addEventListener('DOMContentLoaded', () => {
-  loadProjectDetails('holiday-adventures');
+  loadDestinationDetails('holiday-adventures');
   initItineraryMap();
   initTheme();
   loadData();
