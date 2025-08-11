@@ -363,8 +363,7 @@ async function loadHolidayBits(headers) {
     { path: 'destinations', title: 'Destinations' },
     { path: 'ideas', title: 'Ideas' },
     { path: 'packing-lists', title: 'Packing Lists' },
-    { path: 'itinerary-templates', title: 'Itinerary Templates' },
-    { path: 'projects', title: 'Projects' }
+    { path: 'itinerary-templates', title: 'Itinerary Templates' }
   ];
   for (const { path, title } of sections) {
     try {
