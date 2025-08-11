@@ -21,9 +21,9 @@
   </header>
 
   <nav class="main-nav">
-    <a href="#projects"><span class="nav-icon">📁</span>Projects</a>
+    <a href="#destinations"><span class="nav-icon">📁</span>Destinations</a>
     <a href="#tasks"><span class="nav-icon">📝</span>Tasks</a>
-    <a href="#project-board"><span class="nav-icon">📋</span>Project Board</a>
+    <a href="#destination-board"><span class="nav-icon">📋</span>Destination Board</a>
     <a href="#holiday-bits"><span class="nav-icon">🎒</span>Holiday Bits</a>
     <a href="#itinerary"><span class="nav-icon">🗺️</span>Itinerary</a>
   </nav>
@@ -56,7 +56,7 @@
       </ul>
     </section>
 
-    <section id="destinations" class="card" data-aos="fade-up">
+    <section id="destination-highlights" class="card" data-aos="fade-up">
       <h2>Destination Highlights</h2>
       <div class="destinations-grid">
         <div class="destination" data-aos="zoom-in">
@@ -83,20 +83,21 @@
         <button id="save-token">Save Token</button>
       </section>
 
-        <section id="projects" class="card">
-          <h2>Projects</h2>
-          <p id="project-description"></p>
+        <section id="destinations" class="card">
+          <h2>Destinations</h2>
+          <p id="destination-description"></p>
           <h3>Milestones</h3>
-          <ul id="project-milestones"></ul>
+          <ul id="destination-milestones"></ul>
           <h3>Issues</h3>
-          <ul id="project-issues"></ul>
-          <h3>Create New Project</h3>
-          <form id="new-project-form">
-            <label for="project-title">Title</label>
-            <input type="text" id="project-title" required />
-            <button type="submit">New Project</button>
+          <ul id="destination-issues"></ul>
+          <h3>Create New Destination</h3>
+          <form id="new-destination-form">
+            <label for="destination-title">Title</label>
+            <input type="text" id="destination-title" required />
+            <button type="submit">New Destination</button>
+            
           </form>
-          <div id="project-create-result"></div>
+          <div id="destination-create-result"></div>
         </section>
 
       <section id="holiday-bits" class="card">
@@ -138,10 +139,10 @@
             <ul id="tasks-list"></ul>
           </section>
 
-          <section id="project-board" class="card">
-            <h2>Project Board</h2>
-            <img src="assets/planning.svg" alt="Project planning board" class="section-image" loading="lazy" referrerpolicy="no-referrer" />
-            <div id="project-columns"></div>
+          <section id="destination-board" class="card">
+            <h2>Destination Board</h2>
+            <img src="assets/planning.svg" alt="Destination planning board" class="section-image" loading="lazy" referrerpolicy="no-referrer" />
+            <div id="destination-columns"></div>
           </section>
         </div>
       </div>
@@ -154,8 +155,8 @@
           <input type="text" id="task-title" required />
           <label for="task-body">Description</label>
           <textarea id="task-body" required></textarea>
-          <label for="task-project">Project</label>
-          <select id="task-project"></select>
+          <label for="task-destination">Destination</label>
+          <select id="task-destination"></select>
           <button type="submit">Create Task</button>
         </form>
         <div id="task-result"></div>

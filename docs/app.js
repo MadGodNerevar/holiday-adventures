@@ -52,9 +52,9 @@ function getHolidayToken() {
 }
 
 async function loadProjectDetails(project) {
-  const descEl = document.getElementById('project-description');
-  const milestonesEl = document.getElementById('project-milestones');
-  const issuesEl = document.getElementById('project-issues');
+  const descEl = document.getElementById('destination-description');
+  const milestonesEl = document.getElementById('destination-milestones');
+  const issuesEl = document.getElementById('destination-issues');
   if (descEl) descEl.textContent = '';
   if (milestonesEl) milestonesEl.innerHTML = '';
   if (issuesEl) issuesEl.innerHTML = '';
@@ -193,9 +193,9 @@ async function loadTasks(headers, projectId) {
 }
 
 async function loadProjectBoard(headers, projectId) {
-  const boardEl = document.getElementById('project-columns');
+  const boardEl = document.getElementById('destination-columns');
   if (!boardEl) {
-    console.warn('Project columns element not found');
+    console.warn('Destination columns element not found');
     return;
   }
   boardEl.innerHTML = '';
@@ -282,7 +282,7 @@ async function loadProjectBoard(headers, projectId) {
       projects = projectData?.data?.repository?.projectsV2?.nodes || [];
     }
     if (!projects.length) {
-      boardEl.textContent = 'No projects found';
+      boardEl.textContent = 'No destinations found';
       return;
     }
     for (const project of projects) {
@@ -336,17 +336,17 @@ async function loadProjectBoard(headers, projectId) {
       projectDiv.appendChild(columnsContainer);
       boardEl.appendChild(projectDiv);
     }
-    populateTaskProjectSelector(projects);
+    populateTaskDestinationSelector(projects);
   } catch (err) {
-    boardEl.textContent = 'Projects could not be loaded.';
+    boardEl.textContent = 'Destinations could not be loaded.';
     console.error(err);
   }
 }
 
-function populateTaskProjectSelector(projects) {
-  const select = document.getElementById('task-project');
+function populateTaskDestinationSelector(projects) {
+  const select = document.getElementById('task-destination');
   if (!select) return;
-  select.innerHTML = '<option value="">Select Project</option>';
+  select.innerHTML = '<option value="">Select Destination</option>';
   projects.forEach(p => {
     const opt = document.createElement('option');
     opt.value = p.id;
@@ -364,7 +364,7 @@ async function loadHolidayBits(headers) {
     { path: 'ideas', title: 'Ideas' },
     { path: 'packing-lists', title: 'Packing Lists' },
     { path: 'itinerary-templates', title: 'Itinerary Templates' },
-    { path: 'projects', title: 'Projects' }
+    { path: 'projects', title: 'Destinations' }
   ];
   for (const { path, title } of sections) {
     try {
@@ -752,17 +752,17 @@ if (saveBtn) {
 }
 
 
-const projectForm = document.getElementById('new-project-form');
-if (projectForm) {
-  projectForm.addEventListener('submit', async e => {
+const destinationForm = document.getElementById('new-destination-form');
+if (destinationForm) {
+  destinationForm.addEventListener('submit', async e => {
     e.preventDefault();
-    const title = document.getElementById('project-title').value.trim();
-    const resultEl = document.getElementById('project-create-result');
+    const title = document.getElementById('destination-title').value.trim();
+    const resultEl = document.getElementById('destination-create-result');
     try {
       const project = await createProject(title);
       if (project) {
-        if (resultEl) resultEl.textContent = `Project "${project.title}" created`;
-        projectForm.reset();
+        if (resultEl) resultEl.textContent = `Destination "${project.title}" created`;
+        destinationForm.reset();
         loadData();
       }
     } catch (err) {
@@ -782,7 +782,7 @@ if (taskForm) {
     }
     const title = document.getElementById('task-title').value;
     const body = document.getElementById('task-body').value;
-    const projectId = document.getElementById('task-project').value;
+    const projectId = document.getElementById('task-destination').value;
     const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, {
       method: 'POST',
       headers: {
