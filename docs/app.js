@@ -27,13 +27,19 @@ function initTheme() {
   const media = window.matchMedia('(prefers-color-scheme: dark)');
   const currentTheme = storedTheme || (media.matches ? 'dark' : 'light');
   root.setAttribute('data-theme', currentTheme);
-  if (toggle) toggle.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+  if (toggle) {
+    toggle.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+    toggle.setAttribute('aria-pressed', currentTheme === 'dark');
+  }
 
   media.addEventListener('change', e => {
     if (!localStorage.getItem('theme')) {
       const newTheme = e.matches ? 'dark' : 'light';
       root.setAttribute('data-theme', newTheme);
-      if (toggle) toggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+      if (toggle) {
+        toggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+        toggle.setAttribute('aria-pressed', newTheme === 'dark');
+      }
     }
   });
 
@@ -43,6 +49,7 @@ function initTheme() {
       root.setAttribute('data-theme', theme);
       localStorage.setItem('theme', theme);
       toggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+      toggle.setAttribute('aria-pressed', theme === 'dark');
     });
   }
 }
@@ -51,7 +58,7 @@ function getHolidayToken() {
   return GITHUB_TOKEN || localStorage.getItem('HOLIDAY_TOKEN') || '';
 }
 
-async function loadProjectDetails(project) {
+async function loadDestinationDetails(project) {
   const descEl = document.getElementById('destination-description');
   const milestonesEl = document.getElementById('destination-milestones');
   const issuesEl = document.getElementById('destination-issues');
@@ -59,13 +66,13 @@ async function loadProjectDetails(project) {
   if (milestonesEl) milestonesEl.innerHTML = '';
   if (issuesEl) issuesEl.innerHTML = '';
   try {
-    const repoRes = await fetch(`https://api.github.com/repos/${owner}/${destination}`);
+    const repoRes = await fetch(`https://api.github.com/repos/${owner}/${project}`);
     if (repoRes.ok && descEl) {
       const repoData = await repoRes.json();
       descEl.textContent = repoData.description || 'No description provided';
     }
 
-    const milestoneRes = await fetch(`https://api.github.com/repos/${owner}/${destination}/milestones`);
+    const milestoneRes = await fetch(`https://api.github.com/repos/${owner}/${project}/milestones`);
     if (milestoneRes.ok && milestonesEl) {
       const milestones = await milestoneRes.json();
       if (milestones.length) {
@@ -81,7 +88,7 @@ async function loadProjectDetails(project) {
       }
     }
 
-    const issuesRes = await fetch(`https://api.github.com/repos/${owner}/${destination}/issues`);
+    const issuesRes = await fetch(`https://api.github.com/repos/${owner}/${project}/issues`);
     if (issuesRes.ok && issuesEl) {
       const issues = await issuesRes.json();
       if (issues.length) {
@@ -101,8 +108,8 @@ async function loadProjectDetails(project) {
       }
     }
   } catch (err) {
-    console.error('loadDestinationDetails:', err);
-}
+    console.error('loadDestinationDetails failed:', err);
+  }
 }
 
 async function loadTasks(headers, destinationId) {
@@ -192,7 +199,7 @@ async function loadTasks(headers, destinationId) {
   }
 }
 
-async function loadProjectBoard(headers, projectId) {
+async function loadDestinationBoard(headers, projectId) {
   const boardEl = document.getElementById('destination-columns');
   if (!boardEl) {
     console.warn('Destination columns element not found');
