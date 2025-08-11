@@ -51,7 +51,7 @@ function getHolidayToken() {
   return GITHUB_TOKEN || localStorage.getItem('HOLIDAY_TOKEN') || '';
 }
 
-async function loadDestinationDetails(destination) {
+async function loadProjectDetails(project) {
   const descEl = document.getElementById('destination-description');
   const milestonesEl = document.getElementById('destination-milestones');
   const issuesEl = document.getElementById('destination-issues');
@@ -192,7 +192,7 @@ async function loadTasks(headers, destinationId) {
   }
 }
 
-async function loadDestinationBoard(headers, destinationId) {
+async function loadProjectBoard(headers, projectId) {
   const boardEl = document.getElementById('destination-columns');
   if (!boardEl) {
     console.warn('Destination columns element not found');
@@ -281,7 +281,8 @@ async function loadDestinationBoard(headers, destinationId) {
       const destinationData = await destinationRes.json();
       destinations = destinationData?.data?.repository?.projectsV2?.nodes || [];
     }
-    if (!destinations.length) {
+
+    if (!projects.length) {
       boardEl.textContent = 'No destinations found';
       return;
     }
@@ -336,18 +337,18 @@ async function loadDestinationBoard(headers, destinationId) {
       destinationDiv.appendChild(columnsContainer);
       boardEl.appendChild(destinationDiv);
     }
-    populateTaskDestinationSelector(destinations);
+    populateTaskDestinationSelector(projects);
   } catch (err) {
     boardEl.textContent = 'Destinations could not be loaded.';
     console.error(err);
   }
 }
 
-function populateTaskDestinationSelector(destinations) {
+function populateTaskDestinationSelector(projects) {
   const select = document.getElementById('task-destination');
   if (!select) return;
   select.innerHTML = '<option value="">Select Destination</option>';
-  destinations.forEach(d => {
+  projects.forEach(p => {
     const opt = document.createElement('option');
     opt.value = d.id;
     opt.textContent = d.title;
@@ -363,7 +364,8 @@ async function loadHolidayBits(headers) {
     { path: 'destinations', title: 'Destinations' },
     { path: 'ideas', title: 'Ideas' },
     { path: 'packing-lists', title: 'Packing Lists' },
-    { path: 'itinerary-templates', title: 'Itinerary Templates' }
+    { path: 'itinerary-templates', title: 'Itinerary Templates' },
+    { path: 'projects', title: 'Destinations' }
   ];
   for (const { path, title } of sections) {
     try {
@@ -758,9 +760,9 @@ if (destinationForm) {
     const title = document.getElementById('destination-title').value.trim();
     const resultEl = document.getElementById('destination-create-result');
     try {
-      const destination = await createDestination(title);
-      if (destination) {
-        if (resultEl) resultEl.textContent = `Destination "${destination.title}" created`;
+      const project = await createProject(title);
+      if (project) {
+        if (resultEl) resultEl.textContent = `Destination "${project.title}" created`;
         destinationForm.reset();
         loadData();
       }
@@ -781,7 +783,7 @@ if (taskForm) {
     }
     const title = document.getElementById('task-title').value;
     const body = document.getElementById('task-body').value;
-    const destinationId = document.getElementById('task-destination').value;
+    const projectId = document.getElementById('task-destination').value;
     const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, {
       method: 'POST',
       headers: {
