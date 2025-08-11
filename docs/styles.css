@@ -29,6 +29,7 @@
   --font-size-lg: 1.375rem;
   --font-size-xl: 1.75rem;
   --font-size-xxl: 2.5rem;
+  --font-size-xxxl: 3rem;
 
   /* Color tokens */
   --color-primary: #00b4d8;
@@ -108,7 +109,8 @@ h1, h2, h3 {
 }
 
 h1 {
-  font-size: var(--font-size-xxl);
+  font-size: var(--font-size-xxxl);
+  font-weight: 700;
 }
 
 h2 {
@@ -130,6 +132,8 @@ p {
   align-items: center;
   background: var(--color-primary);
   color: var(--color-text-inverse);
+  position: relative;
+  z-index: 10;
   padding: var(--space-md) var(--space-xl);
 }
 
