@@ -186,7 +186,7 @@ h2::before {
   content: '📋';
 }
 
-#project-board h2::before {
+#destination-board h2::before {
   content: '🗂️';
 }
 
@@ -339,7 +339,7 @@ button:hover {
 }
 
 @media (min-width: 768px) {
-  #project-board,
+  #destination-board,
   form.card {
     grid-template-columns: 1fr 1fr;
   }
