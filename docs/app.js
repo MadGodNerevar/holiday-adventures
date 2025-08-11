@@ -51,7 +51,7 @@ function getHolidayToken() {
   return GITHUB_TOKEN || localStorage.getItem('HOLIDAY_TOKEN') || '';
 }
 
-async function loadProjectDetails(project) {
+async function loadDestinationDetails(project) {
   const descEl = document.getElementById('destination-description');
   const milestonesEl = document.getElementById('destination-milestones');
   const issuesEl = document.getElementById('destination-issues');
@@ -59,13 +59,13 @@ async function loadProjectDetails(project) {
   if (milestonesEl) milestonesEl.innerHTML = '';
   if (issuesEl) issuesEl.innerHTML = '';
   try {
-    const repoRes = await fetch(`https://api.github.com/repos/${owner}/${destination}`);
+    const repoRes = await fetch(`https://api.github.com/repos/${owner}/${project}`);
     if (repoRes.ok && descEl) {
       const repoData = await repoRes.json();
       descEl.textContent = repoData.description || 'No description provided';
     }
 
-    const milestoneRes = await fetch(`https://api.github.com/repos/${owner}/${destination}/milestones`);
+    const milestoneRes = await fetch(`https://api.github.com/repos/${owner}/${project}/milestones`);
     if (milestoneRes.ok && milestonesEl) {
       const milestones = await milestoneRes.json();
       if (milestones.length) {
@@ -81,7 +81,7 @@ async function loadProjectDetails(project) {
       }
     }
 
-    const issuesRes = await fetch(`https://api.github.com/repos/${owner}/${destination}/issues`);
+    const issuesRes = await fetch(`https://api.github.com/repos/${owner}/${project}/issues`);
     if (issuesRes.ok && issuesEl) {
       const issues = await issuesRes.json();
       if (issues.length) {
@@ -101,8 +101,8 @@ async function loadProjectDetails(project) {
       }
     }
   } catch (err) {
-    console.error('loadDestinationDetails:', err);
-}
+    console.error('loadDestinationDetails failed:', err);
+  }
 }
 
 async function loadTasks(headers, destinationId) {
