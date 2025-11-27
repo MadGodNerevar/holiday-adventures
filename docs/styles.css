@@ -461,3 +461,116 @@ form.card button {
 .site-footer .social-icons a:hover {
   color: var(--color-accent);
 }
+
+/* Candidate form */
+.candidate-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.candidate-helper {
+  margin-top: 0;
+  color: var(--section-text);
+}
+
+.candidate-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.candidate-form .form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-md);
+}
+
+.candidate-form label span {
+  display: block;
+  margin-bottom: var(--space-sm);
+  font-weight: 600;
+}
+
+.candidate-form input,
+.candidate-form select {
+  width: 100%;
+  padding: var(--space-sm);
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  background: var(--input-bg);
+  color: var(--input-text);
+}
+
+.type-select {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--space-sm);
+}
+
+.type-select button {
+  align-self: stretch;
+}
+
+.upload-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-md);
+}
+
+.upload-control {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  border: 1px dashed var(--input-border);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.upload-control input[type="file"] {
+  display: none;
+}
+
+.file-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-sm);
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.file-name {
+  margin: 0;
+  color: var(--section-text);
+  font-size: 0.9rem;
+}
+
+.compliance {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  border: 1px dashed var(--input-border);
+  padding: var(--space-md);
+  border-radius: 8px;
+}
+
+.compliance legend {
+  font-weight: 700;
+  padding: 0 var(--space-sm);
+}
+
+.primary-btn {
+  justify-self: start;
+  font-weight: 700;
+}
+
+.form-result {
+  min-height: 1.5rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}

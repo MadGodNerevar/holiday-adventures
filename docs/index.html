@@ -50,6 +50,68 @@
       </div>
     </section>
 
+    <section id="candidate" class="card candidate-card" data-aos="fade-up">
+      <h2>New Candidate</h2>
+      <p class="candidate-helper">Capture key details up front, including compliance documents when candidates are ready to share them.</p>
+      <form id="candidate-form" class="candidate-form">
+        <div class="form-grid">
+          <label>
+            <span>First name</span>
+            <input type="text" id="candidate-first-name" name="firstName" required />
+          </label>
+          <label>
+            <span>Last name</span>
+            <input type="text" id="candidate-last-name" name="lastName" required />
+          </label>
+          <label>
+            <span>Email</span>
+            <input type="email" id="candidate-email" name="email" required />
+          </label>
+          <label>
+            <span>Phone</span>
+            <input type="tel" id="candidate-phone" name="phone" />
+          </label>
+        </div>
+
+        <div class="form-grid type-row">
+          <label>
+            <span>Type</span>
+            <div class="type-select">
+              <select id="candidate-type" name="type">
+                <option value="">No type</option>
+                <option value="permanent">Permanent</option>
+                <option value="contract">Contract</option>
+              </select>
+              <input type="text" id="candidate-type-new" name="typeNew" placeholder="Add new type" />
+              <button type="button" id="candidate-type-add">Add</button>
+            </div>
+          </label>
+        </div>
+
+        <div class="upload-row">
+          <div class="upload-control">
+            <label for="candidate-cv" class="file-button">Upload CV</label>
+            <input type="file" id="candidate-cv" name="cv" accept=".pdf,.doc,.docx" />
+            <p class="file-name" id="candidate-cv-name">No file selected</p>
+          </div>
+          <div class="upload-control">
+            <label for="candidate-rtw" class="file-button">Upload RTW</label>
+            <input type="file" id="candidate-rtw" name="rtw" accept="image/*,.pdf" />
+            <p class="file-name" id="candidate-rtw-name">No file selected</p>
+          </div>
+        </div>
+
+        <fieldset class="compliance">
+          <legend>Compliance</legend>
+          <label><input type="checkbox" id="candidate-cv-on-file" /> CV on file</label>
+          <label><input type="checkbox" id="candidate-rtw-verified" /> Right to work verified</label>
+        </fieldset>
+
+        <button type="submit" class="primary-btn">Create Candidate</button>
+      </form>
+      <div id="candidate-result" class="form-result" role="status" aria-live="polite"></div>
+    </section>
+
     <section id="planner" class="card" data-aos="fade-up">
       <h2>Interactive Planner</h2>
       <div class="progress-wrapper">
