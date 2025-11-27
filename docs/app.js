@@ -704,6 +704,76 @@ function initImageFallback() {
   });
 }
 
+function initCandidateForm() {
+  const form = document.getElementById('candidate-form');
+  if (!form) return;
+
+  const cvInput = document.getElementById('candidate-cv');
+  const cvLabel = document.getElementById('candidate-cv-name');
+  const rtwInput = document.getElementById('candidate-rtw');
+  const rtwLabel = document.getElementById('candidate-rtw-name');
+  const typeSelect = document.getElementById('candidate-type');
+  const newTypeInput = document.getElementById('candidate-type-new');
+  const addTypeBtn = document.getElementById('candidate-type-add');
+  const resultEl = document.getElementById('candidate-result');
+
+  const updateFileLabel = (input, label) => {
+    if (!input || !label) return;
+    label.textContent = input.files && input.files.length ? input.files[0].name : 'No file selected';
+  };
+
+  if (cvInput && cvLabel) {
+    cvInput.addEventListener('change', () => updateFileLabel(cvInput, cvLabel));
+  }
+  if (rtwInput && rtwLabel) {
+    rtwInput.addEventListener('change', () => updateFileLabel(rtwInput, rtwLabel));
+  }
+
+  if (addTypeBtn && newTypeInput && typeSelect) {
+    addTypeBtn.addEventListener('click', () => {
+      const value = newTypeInput.value.trim();
+      if (!value) return;
+      const optionExists = Array.from(typeSelect.options).some(opt => opt.value.toLowerCase() === value.toLowerCase());
+      if (!optionExists) {
+        const opt = document.createElement('option');
+        opt.value = value;
+        opt.textContent = value.charAt(0).toUpperCase() + value.slice(1);
+        typeSelect.appendChild(opt);
+      }
+      typeSelect.value = value;
+      newTypeInput.value = '';
+    });
+  }
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const first = document.getElementById('candidate-first-name').value.trim();
+    const last = document.getElementById('candidate-last-name').value.trim();
+    const selectedType = typeSelect ? typeSelect.value : '';
+    const hasCv = cvInput && cvInput.files && cvInput.files.length;
+    const hasRtw = rtwInput && rtwInput.files && rtwInput.files.length;
+    const cvOnFile = document.getElementById('candidate-cv-on-file')?.checked;
+    const rtwVerified = document.getElementById('candidate-rtw-verified')?.checked;
+
+    const details = [
+      selectedType ? `Type: ${selectedType}` : 'Type not set',
+      hasCv ? `CV uploaded (${cvInput.files[0].name})` : 'CV not attached',
+      hasRtw ? `RTW uploaded (${rtwInput.files[0].name})` : 'RTW not attached',
+      cvOnFile ? 'CV on file' : 'CV pending',
+      rtwVerified ? 'RTW verified' : 'RTW pending'
+    ];
+
+    if (resultEl) {
+      const name = `${first} ${last}`.trim() || 'Candidate';
+      resultEl.textContent = `${name} captured. ${details.join(' | ')}.`;
+    }
+
+    form.reset();
+    updateFileLabel(cvInput, cvLabel);
+    updateFileLabel(rtwInput, rtwLabel);
+  });
+}
+
 async function createDestination(title) {
   const token = getHolidayToken();
   if (!token) {
@@ -890,6 +960,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadDestinationDetails('holiday-adventures');
   initItineraryMap();
   initTheme();
+  initCandidateForm();
   loadData();
   updateActiveNav();
   initAnimations();
