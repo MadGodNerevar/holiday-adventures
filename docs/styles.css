@@ -89,12 +89,14 @@ body {
   color: var(--color-text);
   line-height: 1.6;
   font-size: var(--font-size-base);
+  overflow-x: hidden;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: var(--space-lg);
+  width: 100%;
 }
 
 h1, h2, h3 {
@@ -260,6 +262,10 @@ h2::before {
   gap: var(--space-md);
   background: var(--color-surface);
   padding: var(--space-sm);
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 .main-nav a {
@@ -370,6 +376,7 @@ form.card button {
   display: flex;
   justify-content: center;
   gap: var(--space-lg);
+  flex-wrap: wrap;
 }
 
 .hero-cta button {
@@ -378,6 +385,7 @@ form.card button {
   padding: var(--space-md) var(--space-xl);
   font-weight: 700;
   will-change: transform, opacity;
+  min-width: 220px;
 }
 
 #planner .progress-wrapper {
@@ -573,4 +581,72 @@ form.card button {
   min-height: 1.5rem;
   font-weight: 600;
   color: var(--color-primary);
+}
+
+/* Responsive tweaks for small screens */
+@media (max-width: 768px) {
+  :root {
+    --font-size-base: 0.95rem;
+    --font-size-md: 1.05rem;
+    --font-size-xl: 1.5rem;
+  }
+
+  .container {
+    padding: var(--space-md);
+  }
+
+  .banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+
+  .main-nav {
+    justify-content: flex-start;
+    gap: var(--space-sm);
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .main-nav a {
+    flex: 0 0 auto;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.03);
+  }
+
+  .hero {
+    height: auto;
+    min-height: 38vh;
+    padding: var(--space-md);
+  }
+
+  .hero-tagline {
+    max-width: 100%;
+  }
+
+  .hero-cta {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-cta button {
+    width: 100%;
+  }
+
+  .card {
+    padding: var(--space-lg);
+  }
+
+  .candidate-form .form-grid,
+  .upload-row,
+  .type-select {
+    grid-template-columns: 1fr;
+  }
+
+  form.card button,
+  .primary-btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
